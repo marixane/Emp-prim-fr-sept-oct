@@ -372,11 +372,11 @@ button:disabled {
 
 .resize-handle {
   position: absolute;
-  top: -8px;
-  left: 620px;
-  right: 18px;
+  top: -18px;
+  left: 640px;
+  right: 6px;
   width: auto;
-  height: 16px;
+  height: 38px;
   margin: 0;
   padding: 0;
   border: 0;
