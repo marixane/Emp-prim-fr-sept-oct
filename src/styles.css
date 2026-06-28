@@ -46,7 +46,6 @@ small {
 }
 
 input,
-select,
 textarea,
 button {
   width: 100%;
@@ -66,8 +65,37 @@ button {
   font-weight: bold;
 }
 
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .secondary {
   background: #555;
+}
+
+.duration-control {
+  display: grid;
+  grid-template-columns: 48px 1fr 48px;
+  gap: 8px;
+  align-items: center;
+}
+
+.duration-control button {
+  height: 44px;
+  margin-top: 0;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.duration-control strong {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 18px;
 }
 
 .two-cols {
