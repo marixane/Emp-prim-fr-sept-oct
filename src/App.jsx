@@ -3,10 +3,12 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
 const DEFAULT_EXERCISES = [
-  { id: 'ex1', title: 'Exercice 1', points: '6 Pts', image: null },
-  { id: 'ex2', title: 'Exercice 2', points: '- Pts', image: null },
-  { id: 'ex3', title: 'Exercice 3', points: '- Pts', image: null },
+  { id: 'ex1', title: 'Exercice 1', points: '6 Pts', image: null, offsetY: 0 },
+  { id: 'ex2', title: 'Exercice 2', points: '- Pts', image: null, offsetY: 0 },
+  { id: 'ex3', title: 'Exercice 3', points: '- Pts', image: null, offsetY: 0 },
 ];
+
+const clamp = (value, min, max) => Math.min(Math.max(Number(value), min), max);
 
 function App() {
   const [studentLevel, setStudentLevel] = useState('2 Bac SPF');
@@ -22,6 +24,11 @@ function App() {
     setExercises((items) =>
       items.map((item) => (item.id === id ? { ...item, [field]: value } : item))
     );
+  };
+
+  const updateOffset = (id, value) => {
+    const safeValue = clamp(value, 0, 60);
+    updateExercise(id, 'offsetY', safeValue);
   };
 
   const handleExerciseImage = (id, file) => {
@@ -64,7 +71,7 @@ function App() {
         <p className="eyebrow">A4 Exam Maker</p>
         <h1>Créer une feuille A4 avec entête fixe</h1>
         <p className="intro">
-          Ajoute une photo dans Exercice 1, 2 ou 3. L'entête reste fixe comme le modèle.
+          Les photos restent dans leur cadre. Tu peux descendre Exercice 2 et Exercice 3 sans sortir de la page.
         </p>
 
         <div className="form-group">
@@ -94,7 +101,7 @@ function App() {
 
         <hr />
 
-        {exercises.map((exercise) => (
+        {exercises.map((exercise, index) => (
           <div className="exercise-control" key={exercise.id}>
             <div className="two-cols">
               <div>
@@ -112,6 +119,20 @@ function App() {
                 />
               </div>
             </div>
+
+            {index > 0 && (
+              <div className="form-group">
+                <label>Position verticale de {exercise.title}</label>
+                <input
+                  type="range"
+                  min="0"
+                  max="60"
+                  value={exercise.offsetY}
+                  onChange={(e) => updateOffset(exercise.id, e.target.value)}
+                />
+                <small>{exercise.offsetY}px vers le bas</small>
+              </div>
+            )}
 
             <label>Photo pour {exercise.title}</label>
             <input
@@ -164,7 +185,11 @@ function App() {
 
           <div className="exercise-list">
             {exercises.map((exercise, index) => (
-              <section className="exam-exercise" key={exercise.id}>
+              <section
+                className={`exam-exercise ex-${index + 1}`}
+                key={exercise.id}
+                style={{ marginTop: index > 0 ? `${exercise.offsetY}px` : '0px' }}
+              >
                 <div className="exercise-title">
                   {exercise.title} : * ( {exercise.points} ) *
                 </div>
