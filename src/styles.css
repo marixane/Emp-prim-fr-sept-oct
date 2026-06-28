@@ -154,14 +154,28 @@ button:disabled {
 }
 
 .level-box {
-  margin: 12px auto;
-  padding: 5px;
+  margin: 8px auto;
+  padding: 4px;
   background: #111;
   color: white;
   border-radius: 8px;
-  height: 28px;
+  min-height: 44px;
+  width: 86px;
   text-align: center;
   font-weight: bold;
+}
+
+.level-box span {
+  display: block;
+  font-size: 10px;
+  line-height: 1;
+  margin-bottom: 3px;
+}
+
+.level-box strong {
+  display: block;
+  font-size: 12px;
+  line-height: 1.1;
 }
 
 .duration-box {
