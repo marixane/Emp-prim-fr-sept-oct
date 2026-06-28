@@ -12,6 +12,8 @@ const TOTAL_EXERCISE_HEIGHT = 986;
 const MIN_EXERCISE_HEIGHT = 120;
 const MIN_EXERCISES = 1;
 const MAX_EXERCISES = 6;
+const INDIVIDUAL_TITLE = 'Devoir individuel de Mathématique';
+const HOMEWORK_TITLE = 'Devoir à la maison de Mathématique';
 
 const clamp = (value, min, max) => Math.min(Math.max(Number(value), min), max);
 
@@ -85,7 +87,8 @@ const createHeights = (count) => {
 function App() {
   const [studentLevel, setStudentLevel] = useState('2 Bac SPF');
   const [durationIndex, setDurationIndex] = useState(DEFAULT_DURATION_INDEX);
-  const [testTitle, setTestTitle] = useState('Devoir individuel de Mathématique');
+  const [assignmentType, setAssignmentType] = useState('individual');
+  const [testTitle, setTestTitle] = useState(INDIVIDUAL_TITLE);
   const [teacher, setTeacher] = useState('Prof : Marwane.R');
   const [exercises, setExercises] = useState(() => createExercises(3));
   const [isTotalLocked, setIsTotalLocked] = useState(true);
@@ -97,7 +100,13 @@ function App() {
   const fileInputRefs = useRef({});
 
   const duration = DURATION_OPTIONS[durationIndex];
+  const isHomework = assignmentType === 'homework';
   const totalPoints = Math.round(exercises.reduce((sum, exercise) => sum + exercise.points, 0) * 100) / 100;
+
+  const changeAssignmentType = (nextType) => {
+    setAssignmentType(nextType);
+    setTestTitle(nextType === 'homework' ? HOMEWORK_TITLE : INDIVIDUAL_TITLE);
+  };
 
   const changeDuration = (step) => {
     setDurationIndex((currentIndex) =>
@@ -513,22 +522,46 @@ function App() {
         <p className="eyebrow">A4 Exam Maker</p>
         <h1>Créer une feuille A4 avec entête fixe</h1>
         <p className="intro">
-          Choisis le nombre d’exercices, entre 1 et 6. Les contrôles de chaque exercice sont directement dans la page.
+          Choisis le type de devoir, puis le nombre d’exercices entre 1 et 6.
         </p>
 
-        <label className="total-lock-control">
-          <input
-            type="checkbox"
-            checked={isTotalLocked}
-            onChange={(e) => changeTotalLock(e.target.checked)}
-          />
-          Total bloqué à 20 points
-        </label>
+        <div className="form-group">
+          <label>Type de devoir</label>
+          <div className="duration-control compact-control assignment-control">
+            <button
+              type="button"
+              onClick={() => changeAssignmentType('individual')}
+              disabled={assignmentType === 'individual'}
+            >
+              Individuel
+            </button>
+            <button
+              type="button"
+              onClick={() => changeAssignmentType('homework')}
+              disabled={assignmentType === 'homework'}
+            >
+              À la maison
+            </button>
+          </div>
+        </div>
 
-        <p className={`points-total ${isTotalLocked ? 'locked' : 'free'}`}>
-          {isTotalLocked ? 'Total bloqué : ' : 'Total libre : '}
-          {formatPoints(totalPoints)}
-        </p>
+        {!isHomework && (
+          <>
+            <label className="total-lock-control">
+              <input
+                type="checkbox"
+                checked={isTotalLocked}
+                onChange={(e) => changeTotalLock(e.target.checked)}
+              />
+              Total bloqué à 20 points
+            </label>
+
+            <p className={`points-total ${isTotalLocked ? 'locked' : 'free'}`}>
+              {isTotalLocked ? 'Total bloqué : ' : 'Total libre : '}
+              {formatPoints(totalPoints)}
+            </p>
+          </>
+        )}
 
         <div className="form-group">
           <label>Nombre d’exercices</label>
@@ -647,26 +680,32 @@ function App() {
                   />
                 )}
                 <div className="exercise-title exercise-title-controls">
-                  <span>{exercise.title} : </span>
-                  <span className="points-decoration">* (</span>
-                  <button
-                    type="button"
-                    onClick={() => changeExercisePoints(index, -1)}
-                    disabled={!canChangeExercisePoints(index, -1)}
-                    aria-label={`Diminuer les points de ${exercise.title}`}
-                  >
-                    −
-                  </button>
-                  <strong>{formatPoints(exercise.points)}</strong>
-                  <button
-                    type="button"
-                    onClick={() => changeExercisePoints(index, 1)}
-                    disabled={!canChangeExercisePoints(index, 1)}
-                    aria-label={`Augmenter les points de ${exercise.title}`}
-                  >
-                    +
-                  </button>
-                  <span className="points-decoration">) *</span>
+                  {isHomework ? (
+                    <span>{exercise.title}</span>
+                  ) : (
+                    <>
+                      <span>{exercise.title} : </span>
+                      <span className="points-decoration">* (</span>
+                      <button
+                        type="button"
+                        onClick={() => changeExercisePoints(index, -1)}
+                        disabled={!canChangeExercisePoints(index, -1)}
+                        aria-label={`Diminuer les points de ${exercise.title}`}
+                      >
+                        −
+                      </button>
+                      <strong>{formatPoints(exercise.points)}</strong>
+                      <button
+                        type="button"
+                        onClick={() => changeExercisePoints(index, 1)}
+                        disabled={!canChangeExercisePoints(index, 1)}
+                        aria-label={`Augmenter les points de ${exercise.title}`}
+                      >
+                        +
+                      </button>
+                      <span className="points-decoration">) *</span>
+                    </>
+                  )}
                 </div>
                 <div
                   className="exercise-body clickable-photo-zone"
