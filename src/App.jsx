@@ -2,12 +2,6 @@ import { useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
-const DEFAULT_EXERCISES = [
-  { id: 'ex1', title: 'Exercice 1', points: 7, image: null, size: 80, zoom: 100, x: 0, y: 0 },
-  { id: 'ex2', title: 'Exercice 2', points: 7, image: null, size: 0, zoom: 100, x: 0, y: 0 },
-  { id: 'ex3', title: 'Exercice 3', points: 6, image: null, size: 0, zoom: 100, x: 0, y: 0 },
-];
-
 const DURATION_OPTIONS = ['30 min', '1 h', '1 h 30', '2 h', '2 h 30', '3 h'];
 const DEFAULT_DURATION_INDEX = 3;
 const POINT_STEP = 0.25;
@@ -16,8 +10,12 @@ const MAX_POINTS = 20;
 const TOTAL_POINTS = 20;
 const TOTAL_EXERCISE_HEIGHT = 986;
 const MIN_EXERCISE_HEIGHT = 120;
+const MIN_EXERCISES = 1;
+const MAX_EXERCISES = 6;
 
 const clamp = (value, min, max) => Math.min(Math.max(Number(value), min), max);
+
+const roundToStep = (value) => Math.round(Number(value) / POINT_STEP) * POINT_STEP;
 
 const formatPoints = (value) => {
   const rounded = Math.round(Number(value) * 100) / 100;
@@ -44,14 +42,44 @@ const getProfessorFontSize = (text) => {
   return 16;
 };
 
+const getBalancedPoints = (count) => {
+  const base = roundToStep(TOTAL_POINTS / count);
+  const points = Array.from({ length: count }, () => base);
+  const diff = Math.round((TOTAL_POINTS - points.reduce((sum, value) => sum + value, 0)) * 100) / 100;
+  points[count - 1] = Math.round((points[count - 1] + diff) * 100) / 100;
+  return points;
+};
+
+const createExercise = (index, points = 5) => ({
+  id: `ex${index + 1}-${Date.now()}`,
+  title: `Exercice ${index + 1}`,
+  points,
+  image: null,
+  zoom: 100,
+  x: 0,
+  y: 0,
+});
+
+const createExercises = (count) => {
+  const points = getBalancedPoints(count);
+  return Array.from({ length: count }, (_, index) => createExercise(index, points[index]));
+};
+
+const createHeights = (count) => {
+  const base = Math.floor(TOTAL_EXERCISE_HEIGHT / count);
+  const heights = Array.from({ length: count }, () => base);
+  heights[count - 1] = TOTAL_EXERCISE_HEIGHT - base * (count - 1);
+  return heights;
+};
+
 function App() {
   const [studentLevel, setStudentLevel] = useState('2 Bac SPF');
   const [durationIndex, setDurationIndex] = useState(DEFAULT_DURATION_INDEX);
   const [testTitle, setTestTitle] = useState('Devoir individuel de Mathématique');
   const [teacher, setTeacher] = useState('Prof : Marwane.R');
-  const [exercises, setExercises] = useState(DEFAULT_EXERCISES);
+  const [exercises, setExercises] = useState(() => createExercises(3));
   const [isTotalLocked, setIsTotalLocked] = useState(true);
-  const [exerciseHeights, setExerciseHeights] = useState([430, 278, 278]);
+  const [exerciseHeights, setExerciseHeights] = useState(() => [430, 278, 278]);
   const [isExporting, setIsExporting] = useState(false);
   const [dragState, setDragState] = useState(null);
   const [resizeState, setResizeState] = useState(null);
@@ -74,6 +102,7 @@ function App() {
   };
 
   const getCompensationIndex = (index) => {
+    if (exercises.length < 2) return -1;
     return index < exercises.length - 1 ? index + 1 : index - 1;
   };
 
@@ -143,20 +172,39 @@ function App() {
     if (!checked) return;
 
     setExercises((items) => {
-      const first = items[0].points;
-      const second = items[1].points;
-      const correctedThird = Math.round((TOTAL_POINTS - first - second) * 100) / 100;
+      const balanced = getBalancedPoints(items.length);
+      return items.map((item, index) => ({ ...item, points: balanced[index] }));
+    });
+  };
 
-      if (correctedThird >= MIN_POINTS && correctedThird <= MAX_POINTS) {
-        return items.map((item, index) =>
-          index === 2 ? { ...item, points: correctedThird } : item
-        );
+  const changeExerciseCount = (step) => {
+    const nextCount = clamp(exercises.length + step, MIN_EXERCISES, MAX_EXERCISES);
+    if (nextCount === exercises.length) return;
+
+    setExercises((items) => {
+      const balanced = getBalancedPoints(nextCount);
+      return Array.from({ length: nextCount }, (_, index) => {
+        const existing = items[index];
+        const nextPoints = isTotalLocked ? balanced[index] : existing?.points ?? 5;
+
+        return existing
+          ? { ...existing, title: `Exercice ${index + 1}`, points: nextPoints }
+          : createExercise(index, nextPoints);
+      });
+    });
+
+    setExerciseHeights((heights) => {
+      if (nextCount > heights.length) {
+        return createHeights(nextCount);
       }
 
-      return DEFAULT_EXERCISES.map((defaultExercise, index) => ({
-        ...items[index],
-        points: defaultExercise.points,
-      }));
+      const kept = heights.slice(0, nextCount);
+      const sum = kept.reduce((total, height) => total + height, 0);
+      const factor = TOTAL_EXERCISE_HEIGHT / sum;
+      const resized = kept.map((height) => Math.max(MIN_EXERCISE_HEIGHT, Math.round(height * factor)));
+      const diff = TOTAL_EXERCISE_HEIGHT - resized.reduce((total, height) => total + height, 0);
+      resized[resized.length - 1] += diff;
+      return resized;
     });
   };
 
@@ -184,17 +232,6 @@ function App() {
       if (index === lowerIndex) return Math.round(height - safeDelta);
       return height;
     });
-  };
-
-  const updateHeightByPercent = (index, value) => {
-    const targetHeight = Math.round((clamp(value, 12, 76) / 100) * TOTAL_EXERCISE_HEIGHT);
-    const compensationIndex = getCompensationIndex(index);
-    const delta = targetHeight - exerciseHeights[index];
-    const upperIndex = index < compensationIndex ? index : compensationIndex;
-    const lowerIndex = index < compensationIndex ? compensationIndex : index;
-    const signedDelta = index === upperIndex ? delta : -delta;
-
-    setExerciseHeights(applyHeightDelta(upperIndex, lowerIndex, signedDelta, exerciseHeights));
   };
 
   const startResize = (event, lowerExerciseIndex) => {
@@ -263,14 +300,6 @@ function App() {
   const endDrag = () => {
     setDragState(null);
   };
-
-  const resetPhotoPosition = (id) => {
-    setExercises((items) =>
-      items.map((item) => (item.id === id ? { ...item, zoom: 100, x: 0, y: 0 } : item))
-    );
-  };
-
-  const getHeightPercentage = (height) => Math.round((height / TOTAL_EXERCISE_HEIGHT) * 100);
 
   const triggerExerciseFileInput = (id) => {
     if (isExporting) return;
@@ -343,7 +372,7 @@ function App() {
         <p className="eyebrow">A4 Exam Maker</p>
         <h1>Créer une feuille A4 avec entête fixe</h1>
         <p className="intro">
-          Coche ou décoche le total à 20 pour lier ou délier les points des exercices.
+          Choisis le nombre d’exercices, entre 1 et 6. Les contrôles de chaque exercice sont directement dans la page.
         </p>
 
         <label className="total-lock-control">
@@ -360,60 +389,41 @@ function App() {
           {formatPoints(totalPoints)}
         </p>
 
-        {exercises.map((exercise, index) => (
-          <fieldset className="exercise-control-card" key={exercise.id}>
-            <legend>{exercise.title} :</legend>
+        <div className="form-group">
+          <label>Nombre d’exercices</label>
+          <div className="duration-control compact-control">
+            <button
+              type="button"
+              onClick={() => changeExerciseCount(-1)}
+              disabled={exercises.length === MIN_EXERCISES}
+              aria-label="Diminuer le nombre d’exercices"
+            >
+              −
+            </button>
+            <strong>{exercises.length}</strong>
+            <button
+              type="button"
+              onClick={() => changeExerciseCount(1)}
+              disabled={exercises.length === MAX_EXERCISES}
+              aria-label="Augmenter le nombre d’exercices"
+            >
+              +
+            </button>
+          </div>
+          <small>Minimum 1, maximum 6 exercices.</small>
+        </div>
 
-            <div className="form-group compact-group">
-              <label>Hauteur</label>
-              <input
-                type="range"
-                min="12"
-                max="76"
-                value={getHeightPercentage(exerciseHeights[index])}
-                onChange={(e) => updateHeightByPercent(index, e.target.value)}
-              />
-              <small>Hauteur actuelle : {getHeightPercentage(exerciseHeights[index])} %</small>
-            </div>
-
-            <input
-              ref={(input) => {
-                fileInputRefs.current[exercise.id] = input;
-              }}
-              className="hidden-file-input"
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleExerciseImage(exercise.id, e.target.files?.[0])}
-            />
-
-            {exercise.image && (
-              <div className="photo-controls">
-                <label>Déplacement horizontal</label>
-                <input
-                  type="range"
-                  min="-200"
-                  max="200"
-                  value={exercise.x}
-                  onChange={(e) => updatePhotoControl(exercise.id, 'x', e.target.value)}
-                />
-                <small>{exercise.x}px</small>
-
-                <label>Déplacement vertical</label>
-                <input
-                  type="range"
-                  min="-200"
-                  max="200"
-                  value={exercise.y}
-                  onChange={(e) => updatePhotoControl(exercise.id, 'y', e.target.value)}
-                />
-                <small>{exercise.y}px</small>
-
-                <button type="button" className="secondary" onClick={() => resetPhotoPosition(exercise.id)}>
-                  Réinitialiser position
-                </button>
-              </div>
-            )}
-          </fieldset>
+        {exercises.map((exercise) => (
+          <input
+            key={exercise.id}
+            ref={(input) => {
+              fileInputRefs.current[exercise.id] = input;
+            }}
+            className="hidden-file-input"
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleExerciseImage(exercise.id, e.target.files?.[0])}
+          />
         ))}
 
         <button type="button" onClick={exportPdf} disabled={isExporting}>
@@ -567,8 +577,6 @@ function App() {
                     <div className="empty-zone">Clique ici pour choisir la photo</div>
                   )}
                 </div>
-                {index === 1 && <span className="side-mark top">1P</span>}
-                {index === 1 && <span className="side-mark middle">1P</span>}
               </section>
             ))}
           </div>
