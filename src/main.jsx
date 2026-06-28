@@ -4,6 +4,7 @@ import App from './App.jsx';
 import './styles.css';
 import './compact-exercise.css';
 import './test-title.css';
+import './dark-background.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
