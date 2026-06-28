@@ -3,9 +3,9 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
 const DEFAULT_EXERCISES = [
-  { id: 'ex1', title: 'Exercice 1', points: '6 Pts', image: null, size: 80 },
-  { id: 'ex2', title: 'Exercice 2', points: '- Pts', image: null, size: 0 },
-  { id: 'ex3', title: 'Exercice 3', points: '- Pts', image: null, size: 0 },
+  { id: 'ex1', title: 'Exercice 1', points: '6 Pts', image: null, size: 80, zoom: 100, x: 0, y: 0 },
+  { id: 'ex2', title: 'Exercice 2', points: '- Pts', image: null, size: 0, zoom: 100, x: 0, y: 0 },
+  { id: 'ex3', title: 'Exercice 3', points: '- Pts', image: null, size: 0, zoom: 100, x: 0, y: 0 },
 ];
 
 const clamp = (value, min, max) => Math.min(Math.max(Number(value), min), max);
@@ -31,6 +31,22 @@ function App() {
     updateExercise(id, 'size', clamp(value, 0, max));
   };
 
+  const updatePhotoControl = (id, field, value) => {
+    const limits = {
+      zoom: [60, 220],
+      x: [-200, 200],
+      y: [-200, 200],
+    };
+
+    updateExercise(id, field, clamp(value, limits[field][0], limits[field][1]));
+  };
+
+  const resetPhotoPosition = (id) => {
+    setExercises((items) =>
+      items.map((item) => (item.id === id ? { ...item, zoom: 100, x: 0, y: 0 } : item))
+    );
+  };
+
   const getExerciseHeights = () => {
     const totalHeight = 986;
     const minSmallHeight = 150;
@@ -48,10 +64,22 @@ function App() {
   const handleExerciseImage = (id, file) => {
     if (!file || !file.type.startsWith('image/')) return;
 
-    updateExercise(id, 'image', {
-      name: file.name,
-      url: URL.createObjectURL(file),
-    });
+    setExercises((items) =>
+      items.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              image: {
+                name: file.name,
+                url: URL.createObjectURL(file),
+              },
+              zoom: 100,
+              x: 0,
+              y: 0,
+            }
+          : item
+      )
+    );
   };
 
   const clearExerciseImage = (id) => {
@@ -85,7 +113,7 @@ function App() {
         <p className="eyebrow">A4 Exam Maker</p>
         <h1>Créer une feuille A4 avec entête fixe</h1>
         <p className="intro">
-          Ajuste la hauteur des exercices. Le système garde les blocs collés et limite le total dans la page A4.
+          Ajuste la hauteur, le zoom et la position des photos dans chaque exercice.
         </p>
 
         <div className="form-group">
@@ -152,10 +180,48 @@ function App() {
               accept="image/*"
               onChange={(e) => handleExerciseImage(exercise.id, e.target.files?.[0])}
             />
+
             {exercise.image && (
-              <button type="button" className="secondary" onClick={() => clearExerciseImage(exercise.id)}>
-                Supprimer la photo
-              </button>
+              <div className="photo-controls">
+                <label>Zoom photo</label>
+                <input
+                  type="range"
+                  min="60"
+                  max="220"
+                  value={exercise.zoom}
+                  onChange={(e) => updatePhotoControl(exercise.id, 'zoom', e.target.value)}
+                />
+                <small>{exercise.zoom}%</small>
+
+                <label>Déplacement horizontal</label>
+                <input
+                  type="range"
+                  min="-200"
+                  max="200"
+                  value={exercise.x}
+                  onChange={(e) => updatePhotoControl(exercise.id, 'x', e.target.value)}
+                />
+                <small>{exercise.x}px</small>
+
+                <label>Déplacement vertical</label>
+                <input
+                  type="range"
+                  min="-200"
+                  max="200"
+                  value={exercise.y}
+                  onChange={(e) => updatePhotoControl(exercise.id, 'y', e.target.value)}
+                />
+                <small>{exercise.y}px</small>
+
+                <div className="two-cols">
+                  <button type="button" className="secondary" onClick={() => resetPhotoPosition(exercise.id)}>
+                    Réinitialiser position
+                  </button>
+                  <button type="button" className="secondary" onClick={() => clearExerciseImage(exercise.id)}>
+                    Supprimer photo
+                  </button>
+                </div>
+              </div>
             )}
           </div>
         ))}
@@ -207,7 +273,13 @@ function App() {
                 </div>
                 <div className="exercise-body">
                   {exercise.image ? (
-                    <img src={exercise.image.url} alt={exercise.image.name} />
+                    <img
+                      src={exercise.image.url}
+                      alt={exercise.image.name}
+                      style={{
+                        transform: `translate(${exercise.x}px, ${exercise.y}px) scale(${exercise.zoom / 100})`,
+                      }}
+                    />
                   ) : (
                     <div className="empty-zone">Photo de {exercise.title}</div>
                   )}
