@@ -8,6 +8,8 @@ const DEFAULT_EXERCISES = [
   { id: 'ex3', title: 'Exercice 3', points: '- Pts', image: null, size: 0, zoom: 100, x: 0, y: 0 },
 ];
 
+const DURATION_OPTIONS = ['30 min', '1 h', '1 h 30', '2 h', '2 h 30', '3 h'];
+
 const clamp = (value, min, max) => Math.min(Math.max(Number(value), min), max);
 
 const getTitleFontSize = (text) => {
@@ -21,7 +23,7 @@ const getTitleFontSize = (text) => {
 
 function App() {
   const [studentLevel, setStudentLevel] = useState('2 Bac SPF');
-  const [duration, setDuration] = useState('2 hs');
+  const [duration, setDuration] = useState('2 h');
   const [testTitle, setTestTitle] = useState('Devoir individuel de Mathématique N°: 1 Semestre: 1 Lycée El Jamai, Tanger');
   const [exercises, setExercises] = useState(DEFAULT_EXERCISES);
   const [isExporting, setIsExporting] = useState(false);
@@ -160,7 +162,7 @@ function App() {
         <p className="eyebrow">A4 Exam Maker</p>
         <h1>Créer une feuille A4 avec entête fixe</h1>
         <p className="intro">
-          La case titre est fixe. Écris seulement le texte, il se place automatiquement dedans.
+          La durée est choisie dans une liste fixe. Par défaut : 2 h.
         </p>
 
         <div className="form-group">
@@ -170,7 +172,11 @@ function App() {
 
         <div className="form-group">
           <label>Durée</label>
-          <input value={duration} onChange={(e) => setDuration(e.target.value)} />
+          <select value={duration} onChange={(e) => setDuration(e.target.value)}>
+            {DURATION_OPTIONS.map((option) => (
+              <option key={option} value={option}>{option}</option>
+            ))}
+          </select>
         </div>
 
         <div className="form-group">
