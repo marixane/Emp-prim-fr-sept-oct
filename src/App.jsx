@@ -12,6 +12,7 @@ const TOTAL_EXERCISE_HEIGHT = 986;
 const TOTAL_SECOND_PAGE_HEIGHT = 840;
 const MIN_EXERCISE_HEIGHT = 120;
 const MIN_EXERCISES = 1;
+const MIN_SECOND_PAGE_EXERCISES = 0;
 const MAX_EXERCISES = 6;
 const INDIVIDUAL_TITLE = 'Devoir individuel de Mathématique\nN°: 1 Semestre: 1 Lycée El jamai ,Tanger';
 const HOMEWORK_TITLE = 'Devoir à la maison de Mathématique\nN°: 1 Semestre: 1 Lycée El jamai ,Tanger';
@@ -74,6 +75,7 @@ const createExercises = (count) => {
 };
 
 const createHeights = (count, totalHeight = TOTAL_EXERCISE_HEIGHT) => {
+  if (count === 0) return [];
   const base = Math.floor(totalHeight / count);
   const heights = Array.from({ length: count }, () => base);
   heights[count - 1] = totalHeight - base * (count - 1);
@@ -99,11 +101,10 @@ function App() {
   const [testTitle, setTestTitle] = useState(INDIVIDUAL_TITLE);
   const [teacher, setTeacher] = useState('Prof : Marwane.R');
   const [exercises, setExercises] = useState(() => createExercises(3));
-  const [secondPageExercises, setSecondPageExercises] = useState(() => createExercises(3));
-  const [isSecondPageEnabled, setIsSecondPageEnabled] = useState(false);
+  const [secondPageExercises, setSecondPageExercises] = useState(() => []);
   const [isTotalLocked, setIsTotalLocked] = useState(true);
   const [exerciseHeights, setExerciseHeights] = useState(() => [430, 278, 278]);
-  const [secondPageHeights, setSecondPageHeights] = useState(() => createHeights(3, TOTAL_SECOND_PAGE_HEIGHT));
+  const [secondPageHeights, setSecondPageHeights] = useState(() => []);
   const [isExporting, setIsExporting] = useState(false);
   const [dragState, setDragState] = useState(null);
   const [resizeState, setResizeState] = useState(null);
@@ -112,6 +113,7 @@ function App() {
 
   const duration = DURATION_OPTIONS[durationIndex];
   const isHomework = assignmentType === 'homework';
+  const isSecondPageEnabled = secondPageExercises.length > 0;
   const activeExercises = [
     ...exercises,
     ...(isSecondPageEnabled ? secondPageExercises : []),
@@ -226,7 +228,7 @@ function App() {
     setSecondPageExercises(nextPageTwo);
   };
 
-  const buildItemsWithCount = (currentItems, nextCount, page) =>
+  const buildItemsWithCount = (currentItems, nextCount) =>
     Array.from({ length: nextCount }, (_, index) => {
       const existing = currentItems[index];
       const nextPoints = existing?.points ?? 5;
@@ -235,13 +237,14 @@ function App() {
 
   const changeExerciseCount = (page, step) => {
     const items = getPageExercises(page);
-    const nextCount = clamp(items.length + step, MIN_EXERCISES, MAX_EXERCISES);
+    const minCount = page === 2 ? MIN_SECOND_PAGE_EXERCISES : MIN_EXERCISES;
+    const nextCount = clamp(items.length + step, minCount, MAX_EXERCISES);
     if (nextCount === items.length) return;
 
     const totalHeight = page === 2 ? TOTAL_SECOND_PAGE_HEIGHT : TOTAL_EXERCISE_HEIGHT;
 
     if (page === 1) {
-      const nextPageOneRaw = buildItemsWithCount(exercises, nextCount, page);
+      const nextPageOneRaw = buildItemsWithCount(exercises, nextCount);
       if (isTotalLocked) {
         const { nextPageOne, nextPageTwo } = assignBalancedPoints(nextPageOneRaw, secondPageExercises, isSecondPageEnabled);
         setExercises(nextPageOne);
@@ -250,9 +253,10 @@ function App() {
         setExercises(nextPageOneRaw);
       }
     } else {
-      const nextPageTwoRaw = buildItemsWithCount(secondPageExercises, nextCount, page);
+      const nextPageTwoRaw = buildItemsWithCount(secondPageExercises, nextCount);
+      const hasSecondPage = nextPageTwoRaw.length > 0;
       if (isTotalLocked) {
-        const { nextPageOne, nextPageTwo } = assignBalancedPoints(exercises, nextPageTwoRaw, isSecondPageEnabled);
+        const { nextPageOne, nextPageTwo } = assignBalancedPoints(exercises, nextPageTwoRaw, hasSecondPage);
         setExercises(nextPageOne);
         setSecondPageExercises(nextPageTwo);
       } else {
@@ -262,6 +266,7 @@ function App() {
 
     const setHeights = page === 2 ? setSecondPageHeights : setExerciseHeights;
     setHeights((heights) => {
+      if (nextCount === 0) return [];
       if (nextCount > heights.length) return createHeights(nextCount, totalHeight);
 
       const kept = heights.slice(0, nextCount);
@@ -272,16 +277,6 @@ function App() {
       resized[resized.length - 1] += diff;
       return resized;
     });
-  };
-
-  const changeSecondPageEnabled = (checked) => {
-    setIsSecondPageEnabled(checked);
-
-    if (!isTotalLocked) return;
-
-    const { nextPageOne, nextPageTwo } = assignBalancedPoints(exercises, secondPageExercises, checked);
-    setExercises(nextPageOne);
-    setSecondPageExercises(nextPageTwo);
   };
 
   const updateImagePosition = (page, id, nextX, nextY) => {
@@ -697,15 +692,6 @@ function App() {
           </div>
         </div>
 
-        <label className="total-lock-control">
-          <input
-            type="checkbox"
-            checked={isSecondPageEnabled}
-            onChange={(e) => changeSecondPageEnabled(e.target.checked)}
-          />
-          Afficher la page 2
-        </label>
-
         {!isHomework && (
           <>
             <label className="total-lock-control">
@@ -733,20 +719,18 @@ function App() {
           </div>
         </div>
 
-        {isSecondPageEnabled && (
-          <div className="form-group">
-            <label>Nombre d’exercices page 2</label>
-            <div className="duration-control compact-control">
-              <button type="button" onClick={() => changeExerciseCount(2, -1)} disabled={secondPageExercises.length === MIN_EXERCISES}>
-                −
-              </button>
-              <strong>{secondPageExercises.length}</strong>
-              <button type="button" onClick={() => changeExerciseCount(2, 1)} disabled={secondPageExercises.length === MAX_EXERCISES}>
-                +
-              </button>
-            </div>
+        <div className="form-group">
+          <label>Nombre d’exercices page 2</label>
+          <div className="duration-control compact-control">
+            <button type="button" onClick={() => changeExerciseCount(2, -1)} disabled={secondPageExercises.length === MIN_SECOND_PAGE_EXERCISES}>
+              −
+            </button>
+            <strong>{secondPageExercises.length}</strong>
+            <button type="button" onClick={() => changeExerciseCount(2, 1)} disabled={secondPageExercises.length === MAX_EXERCISES}>
+              +
+            </button>
           </div>
-        )}
+        </div>
 
         {visibleFileInputs.map(({ exercise, page }) => (
           <input
