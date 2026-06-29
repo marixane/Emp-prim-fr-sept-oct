@@ -9,8 +9,8 @@ const H1 = 986;
 const HN = 840;
 const MIN_H = 120;
 const DURATIONS = ['30 min', '1 h', '1 h 30', '2 h', '2 h 30', '3 h'];
-const IND_TITLE = 'Devoir individuel de Mathématique\nN°: 1 Semestre: 1 Lycée El jamai ,Tanger';
-const HOME_TITLE = 'Devoir à la maison de Mathématique\nN°: 1 Semestre: 1 Lycée El jamai ,Tanger';
+const IND_TITLE = 'Devoir individuel de Mathématique\nN°: 1 Semestre: 1';
+const HOME_TITLE = 'Devoir à la maison de Mathématique\nN°: 1 Semestre: 1';
 
 const clamp = (v, a, b) => Math.min(Math.max(Number(v), a), b);
 const fmt = (v) => {
@@ -34,7 +34,7 @@ export default function App6() {
   const [kind, setKind] = useState('individual');
   const [title, setTitle] = useState(IND_TITLE);
   const [level, setLevel] = useState('Classes : 2 Bac SPF');
-  const [teacher, setTeacher] = useState('Prof : Marwane.R');
+  const [teacher, setTeacher] = useState('Prof : Marwane.R\nLycée El jamai ,Tanger');
   const [duration, setDuration] = useState(3);
   const [pages, setPages] = useState([exs(3), ...Array.from({ length: MAX_PAGES - 1 }, () => [])]);
   const [hs, setHs] = useState([heights(3, H1), ...Array.from({ length: MAX_PAGES - 1 }, () => [])]);
