@@ -62,6 +62,22 @@
   display: none !important;
 }
 
+.left-header-cell,
+.middle-header-cell,
+.right-header-cell {
+  overflow: hidden !important;
+}
+
+.inline-class-input,
+.split-title-cell .title-line,
+.split-right-cell .right-line {
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+}
+
 .split-title-cell,
 .split-right-cell {
   display: flex !important;
@@ -70,7 +86,7 @@
   justify-content: center !important;
   gap: 2mm !important;
   padding: 2px 6px !important;
-  overflow: visible !important;
+  overflow: hidden !important;
 }
 
 .split-title-cell .title-line,
@@ -83,18 +99,10 @@
   line-height: 28px !important;
   text-align: center !important;
   resize: none !important;
-  overflow: visible !important;
   border: 0 !important;
   background: transparent !important;
   font-weight: 900 !important;
   display: block !important;
-}
-
-.split-title-cell .title-line-top,
-.split-title-cell .title-line-middle,
-.split-right-cell .right-line-top,
-.split-right-cell .right-line-bottom {
-  font-size: 17px !important;
 }
 
 .split-title-cell .title-line-bottom {
@@ -113,7 +121,7 @@
   height: 28px !important;
   min-height: 28px !important;
   line-height: 28px !important;
-  overflow: visible !important;
+  overflow: hidden !important;
 }
 
 .exam-page.is-exporting .split-title-cell .title-line-bottom {
