@@ -18,3 +18,18 @@
 .photo-overlay-tools .photo-tool-button {
   grid-row: 2 !important;
 }
+
+.bar-buttons {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.clickable-photo-zone:hover .bar-buttons,
+.bar-buttons:hover {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.exam-page.is-exporting .bar-buttons {
+  display: none !important;
+}
