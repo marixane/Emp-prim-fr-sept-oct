@@ -201,6 +201,15 @@
   cursor: pointer !important;
   padding-top: 6px !important;
   padding-bottom: 6px !important;
+  position: relative !important;
+}
+
+.clickable-photo-zone:has(.empty-zone) .empty-zone::before {
+  content: '';
+  position: absolute;
+  inset: -90px -130px !important;
+  border-radius: 18px;
+  cursor: pointer !important;
 }
 
 .exam-exercise {
