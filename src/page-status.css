@@ -62,14 +62,13 @@
   display: none !important;
 }
 
-.exam-page,
-.exam-page textarea,
-.exam-page input,
-.exam-page button,
-.exam-page strong,
-.exam-page span,
-.exam-page div {
-  font-family: "Chalkboard SE", "Chalkboard", "Comic Sans MS", cursive !important;
+.exam-header,
+.exam-header textarea,
+.exam-header button,
+.exam-header strong,
+.exam-header span,
+.exam-header div {
+  font-family: "Arial Rounded MT Bold", "Arial Rounded MT", Arial, sans-serif !important;
   font-weight: 700 !important;
 }
 
