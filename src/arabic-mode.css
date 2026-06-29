@@ -1,0 +1,61 @@
+body.arabic-mode .exam-page,
+body.arabic-mode .exam-header,
+body.arabic-mode .exam-exercise,
+body.arabic-mode .exercise-title,
+body.arabic-mode .exercise-title-controls {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+body.arabic-mode .exam-header textarea,
+body.arabic-mode .exam-header input {
+  direction: rtl !important;
+  text-align: center !important;
+}
+
+body.arabic-mode .exercise-title {
+  left: auto !important;
+  right: 12px !important;
+}
+
+body.arabic-mode .exam-page.has-bar-ribbon .exercise-body::before {
+  left: auto !important;
+  right: -6px !important;
+}
+
+body.arabic-mode .exam-page.has-bar-ribbon .exercise-body::after {
+  content: 'سلم التنقيط' !important;
+  left: auto !important;
+  right: calc(-2px + 1mm) !important;
+  width: 25px !important;
+  font-size: 6px !important;
+  text-align: center !important;
+}
+
+body.arabic-mode .exam-page.has-bar-ribbon .exercise-body {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.language-toggle {
+  width: 100% !important;
+  min-height: 42px !important;
+  height: 42px !important;
+  margin-top: 4px !important;
+  padding: 5px 6px !important;
+  border-radius: 9px !important;
+  border: 1px solid #d1d5db !important;
+  background: #ffffff !important;
+  color: #111827 !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  line-height: 1.1 !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08) !important;
+  cursor: pointer !important;
+}
+
+body.arabic-mode .language-toggle {
+  background: #ecfdf5 !important;
+  border-color: #86efac !important;
+  color: #065f46 !important;
+}
