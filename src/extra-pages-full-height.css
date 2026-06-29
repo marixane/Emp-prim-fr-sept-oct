@@ -15,8 +15,9 @@
 }
 
 .preview-zone .second-page .exercise-list {
-  height: 1061px !important;
-  min-height: 1061px !important;
+  margin-top: 3mm !important;
+  height: calc(1061px - 3mm) !important;
+  min-height: calc(1061px - 3mm) !important;
   display: flex !important;
   flex-direction: column !important;
   gap: 2px !important;
