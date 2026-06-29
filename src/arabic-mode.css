@@ -18,6 +18,27 @@ body.arabic-mode .exam-page.has-bar-ribbon .exercise-body {
   overflow: visible !important;
 }
 
+body.arabic-mode .exam-page.has-bar-ribbon .exam-exercise .clickable-photo-zone,
+body.arabic-mode .exam-page.has-bar-ribbon .exam-exercise .photo-frame,
+body.arabic-mode .exam-page.has-bar-ribbon .exam-exercise .photo-content,
+body.arabic-mode .exam-page.has-bar-ribbon .exam-exercise .photo-holder,
+body.arabic-mode .exam-page.has-bar-ribbon .exam-exercise .photo-box {
+  overflow: hidden !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  box-sizing: border-box !important;
+  contain: paint !important;
+}
+
+body.arabic-mode .exam-page.has-bar-ribbon .exam-exercise .clickable-photo-zone img,
+body.arabic-mode .exam-page.has-bar-ribbon .exam-exercise .photo-frame img,
+body.arabic-mode .exam-page.has-bar-ribbon .exam-exercise .photo-content img,
+body.arabic-mode .exam-page.has-bar-ribbon .exam-exercise .exercise-body img {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+}
+
 body.arabic-mode .exercise-title {
   left: auto !important;
   right: 12px !important;
@@ -93,6 +114,16 @@ body.arabic-mode .exam-exercise .photo-frame,
 body.arabic-mode .exam-exercise .photo-content {
   overflow: hidden !important;
   max-width: 100% !important;
+}
+
+body.arabic-mode .exam-page.has-bar-ribbon .exercise-body {
+  overflow: hidden !important;
+}
+
+body.arabic-mode .exam-page.has-bar-ribbon .exercise-body::before,
+body.arabic-mode .exam-page.has-bar-ribbon .exam-exercise:first-child .exercise-body::after,
+body.arabic-mode .exam-page.has-bar-ribbon .bar-mark {
+  overflow: visible !important;
 }
 
 body.arabic-mode .exam-exercise .clickable-photo-zone,
