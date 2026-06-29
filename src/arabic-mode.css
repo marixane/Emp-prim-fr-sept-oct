@@ -78,12 +78,28 @@ body.arabic-mode .exam-page.has-bar-ribbon .bar-buttons {
 
 body.arabic-mode .exam-page.has-bar-ribbon .bar-mark {
   left: auto !important;
-  right: calc(7px + 1mm) !important;
+  right: calc(7px + 6mm) !important;
   z-index: 10001 !important;
   background: transparent !important;
   color: #555555 !important;
   font-size: 12px !important;
   font-weight: 800 !important;
+}
+
+body.arabic-mode .clickable-photo-zone,
+body.arabic-mode .photo-frame,
+body.arabic-mode .photo-content,
+body.arabic-mode .exercise-body img {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+  object-fit: contain !important;
+}
+
+body.arabic-mode .photo-overlay-tools {
+  left: 8px !important;
+  right: auto !important;
+  justify-content: start !important;
 }
 
 .language-toggle {
