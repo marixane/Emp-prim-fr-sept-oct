@@ -1,7 +1,8 @@
 .exercise-title-controls {
-  display: inline-flex !important;
+  display: inline-grid !important;
+  grid-template-columns: auto auto 22px 78px 22px auto !important;
   align-items: center !important;
-  gap: 3px !important;
+  column-gap: 3px !important;
 }
 
 .exercise-title-controls .points-decoration {
@@ -39,6 +40,7 @@
   height: 20px !important;
   min-height: 20px !important;
   padding: 0 !important;
+  margin: 0 !important;
   border: 0 !important;
   border-radius: 999px !important;
   background: transparent !important;
@@ -51,23 +53,16 @@
   cursor: pointer !important;
 }
 
-.exercise-title-controls button:first-of-type {
-  margin-left: 2px !important;
-}
-
-.exercise-title-controls button:last-of-type {
-  margin-left: 6px !important;
-  margin-right: 2px !important;
-}
-
 .exercise-title-controls button:disabled {
   opacity: 0.35 !important;
   cursor: not-allowed !important;
 }
 
 .exercise-title-controls strong {
-  min-width: auto !important;
-  padding: 0 5px !important;
+  width: 78px !important;
+  min-width: 78px !important;
+  max-width: 78px !important;
+  padding: 0 !important;
   color: #111111 !important;
   font-size: 13px !important;
   font-weight: 800 !important;
@@ -76,4 +71,5 @@
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
+  white-space: nowrap !important;
 }
