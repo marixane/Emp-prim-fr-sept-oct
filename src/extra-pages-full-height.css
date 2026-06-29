@@ -1,8 +1,8 @@
 @import './sequential-pages.css';
 
 .preview-zone .second-page .exercise-list {
-  height: 1049px !important;
-  min-height: 1049px !important;
+  height: 1053px !important;
+  min-height: 1053px !important;
   display: flex !important;
   flex-direction: column !important;
   gap: 2px !important;
