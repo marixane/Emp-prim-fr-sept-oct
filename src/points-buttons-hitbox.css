@@ -1,0 +1,9 @@
+.exercise-title-controls button::after {
+  inset: -10px -15px -17px -15px !important;
+  transform: translateY(3px) !important;
+}
+
+.exercise-title-controls button:not(:disabled),
+.exercise-title-controls button:not(:disabled)::after {
+  cursor: pointer !important;
+}
