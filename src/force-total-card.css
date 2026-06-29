@@ -21,11 +21,18 @@ label.total-mode-control {
   gap: 5px !important;
 }
 
+label.total-mode-control:has(input:not(:checked)) {
+  background: #ffffff !important;
+  border-color: #d1d5db !important;
+  color: #374151 !important;
+}
+
 label.total-mode-control input {
   width: 13px !important;
   height: 13px !important;
   margin: 0 !important;
   flex: 0 0 auto !important;
+  accent-color: #16a34a !important;
 }
 
 .points-total {
