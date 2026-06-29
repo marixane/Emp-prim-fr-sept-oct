@@ -26,6 +26,7 @@ import './rounded-header-corners.css';
 import './exercise-under-header-spacing.css';
 import './exercise-top-border-fix.css';
 import './force-total-card.css';
+import './auto-scale-a4-preview.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
