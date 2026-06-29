@@ -16,7 +16,7 @@ body.arabic-mode .exam-header input {
 body.arabic-mode .exercise-title {
   left: auto !important;
   right: 12px !important;
-  z-index: 70 !important;
+  z-index: 80 !important;
 }
 
 body.arabic-mode .exam-page.has-bar-ribbon .exercise-body::before {
@@ -25,7 +25,8 @@ body.arabic-mode .exam-page.has-bar-ribbon .exercise-body::before {
   width: 33px !important;
   background: #eeeeee !important;
   border-left: 2px solid #9a9a9a !important;
-  border-right: 2px solid #9a9a9a !important;
+  border-right: 0 !important;
+  box-shadow: inset -3px 0 0 #111111 !important;
   z-index: 46 !important;
 }
 
@@ -63,8 +64,8 @@ body.arabic-mode .exam-page.has-bar-ribbon .bar-buttons {
 
 body.arabic-mode .exam-page.has-bar-ribbon .bar-mark {
   left: auto !important;
-  right: 6px !important;
-  z-index: 62 !important;
+  right: 7px !important;
+  z-index: 60 !important;
   background: transparent !important;
   color: #555555 !important;
   font-size: 12px !important;
