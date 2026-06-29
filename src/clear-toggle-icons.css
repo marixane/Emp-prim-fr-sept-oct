@@ -28,8 +28,34 @@
 }
 
 .bar-ribbon-toggle::before {
+  border-color: #111111 !important;
+  border-radius: 9px 6px 6px 9px !important;
   background:
-    linear-gradient(to right, #111111 0 9px, #f3f4f6 9px 42px, #8b8b8b 42px 50px, transparent 50px),
-    linear-gradient(to bottom, transparent 0 7px, #555555 7px 9px, transparent 9px 18px, #555555 18px 20px, transparent 20px 29px, #555555 29px 31px, transparent 31px),
+    linear-gradient(to right, transparent 0 11px, #111111 11px 16px, transparent 16px),
+    linear-gradient(to bottom, transparent 0 8px, #d7d7d7 8px 10px, transparent 10px 20px, #d7d7d7 20px 22px, transparent 22px 32px, #d7d7d7 32px 34px, transparent 34px),
     #ffffff !important;
+}
+
+.bar-ribbon-toggle::after {
+  z-index: 2 !important;
+}
+
+.bar-ribbon-toggle {
+  position: relative !important;
+}
+
+.bar-ribbon-toggle span {
+  display: none !important;
+}
+
+.bar-ribbon-toggle::before {
+  box-shadow: inset 0 0 0 1px #f5f5f5 !important;
+}
+
+.bar-ribbon-toggle::after {
+  content: 'Barème' !important;
+}
+
+.bar-ribbon-toggle::marker {
+  content: '' !important;
 }
