@@ -38,6 +38,7 @@ export default function App6() {
   const [duration, setDuration] = useState(3);
   const [pages, setPages] = useState([exs(3), ...Array.from({ length: MAX_PAGES - 1 }, () => [])]);
   const [hs, setHs] = useState([heights(3, H1), ...Array.from({ length: MAX_PAGES - 1 }, () => [])]);
+  const [totalLocked, setTotalLocked] = useState(true);
   const [exporting, setExporting] = useState(false);
   const [drag, setDrag] = useState(null);
   const [resize, setResize] = useState(null);
@@ -70,13 +71,20 @@ export default function App6() {
     const p = pts(pos.length);
     return next.map((page, pi) => page.map((item, ei) => ({ ...item, masks: item.masks ?? [], points: p[pos.findIndex((x) => x.pi === pi && x.ei === ei)] ?? item.points })));
   };
+  const changeTotalLock = (checked) => {
+    setTotalLocked(checked);
+    if (checked) setPages((cur) => balance(cur));
+  };
   const setCount = (page, d) => {
     const min = page === 0 ? 1 : 0;
     const n = clamp(pages[page].length + d, min, MAX_EX);
-    setPages((cur) => balance(cur.map((p, i) => {
-      if (n === 0 && i > page) return [];
-      return i === page ? Array.from({ length: n }, (_, j) => p[j] ? { ...p[j], masks: p[j].masks ?? [] } : ex(j)) : p;
-    })));
+    setPages((cur) => {
+      const next = cur.map((p, i) => {
+        if (n === 0 && i > page) return [];
+        return i === page ? Array.from({ length: n }, (_, j) => p[j] ? { ...p[j], masks: p[j].masks ?? [] } : ex(j)) : p;
+      });
+      return totalLocked ? balance(next) : next;
+    });
     setHs((cur) => cur.map((p, i) => {
       if (n === 0 && i > page) return [];
       return i === page ? heights(n, i === 0 ? H1 : HN) : p;
@@ -87,12 +95,26 @@ export default function App6() {
     if (k < 0 || all.length < 2) return null;
     return k < all.length - 1 ? all[k + 1] : all[k - 1];
   };
+  const canChangePoint = (page, index, d) => {
+    const current = pages[page][index];
+    if (!current) return false;
+    const next = Math.round((current.points + d * 0.25) * 100) / 100;
+    if (!totalLocked) return next >= 1 && next <= 20;
+    const peer = pointPeer(page, index);
+    if (!peer) return false;
+    const peerNext = Math.round((peer.e.points - d * 0.25) * 100) / 100;
+    return next >= 1 && next <= 20 && peerNext >= 1 && peerNext <= 20;
+  };
   const changePoint = (page, index, d) => {
+    if (!canChangePoint(page, index, d)) return;
+    if (!totalLocked) {
+      setPages((cur) => cur.map((p, pi) => p.map((e, ei) => pi === page && ei === index ? { ...e, points: Math.round((e.points + d * 0.25) * 100) / 100 } : e)));
+      return;
+    }
     const peer = pointPeer(page, index);
     if (!peer) return;
     const a = pages[page][index].points + d * 0.25;
     const b = peer.e.points - d * 0.25;
-    if (a < 1 || b < 1 || a > 20 || b > 20) return;
     setPages((cur) => cur.map((p, pi) => p.map((e, ei) => {
       if (pi === page && ei === index) return { ...e, points: Math.round(a * 100) / 100 };
       if (pi === peer.page && ei === peer.index) return { ...e, points: Math.round(b * 100) / 100 };
@@ -178,7 +200,7 @@ export default function App6() {
 
   const renderList = (page) => <div className="exercise-list">{pages[page].map((e, i) => <section className={`exam-exercise ex-${i + 1}`} key={e.id} style={{ height: `${hs[page][i]}px` }}>
     {i > 0 && <button type="button" className="resize-handle" onMouseDown={(ev) => startResize(ev, page, i)} aria-label="Modifier la hauteur" />}
-    <div className="exercise-title exercise-title-controls">{kind === 'homework' ? <span>Exercice {startNum(page) + i}</span> : <><span>Exercice {startNum(page) + i} : </span><span className="points-decoration">* (</span><button onClick={() => changePoint(page, i, -1)}>−</button><strong>{fmt(e.points)}</strong><button onClick={() => changePoint(page, i, 1)}>+</button><span className="points-decoration">) *</span></>}</div>
+    <div className="exercise-title exercise-title-controls">{kind === 'homework' ? <span>Exercice {startNum(page) + i}</span> : <><span>Exercice {startNum(page) + i} : </span><span className="points-decoration">* (</span><button onClick={() => changePoint(page, i, -1)} disabled={!canChangePoint(page, i, -1)}>−</button><strong>{fmt(e.points)}</strong><button onClick={() => changePoint(page, i, 1)} disabled={!canChangePoint(page, i, 1)}>+</button><span className="points-decoration">) *</span></>}</div>
     <div className="exercise-body clickable-photo-zone" onClick={() => !e.image && fileRefs.current[e.id]?.click()}>
       {e.image && <div className="photo-overlay-tools" onClick={(ev) => ev.stopPropagation()}><button type="button" className="photo-tool-button" onClick={() => fileRefs.current[e.id]?.click()}>Changer photo</button><button type="button" className="photo-tool-button" onClick={() => addMask(page, e.id)}>Rectangle blanc</button><button type="button" className="photo-tool-button danger" onClick={() => clearImage(page, e.id)}>Supprimer</button><label className="photo-zoom-control">Zoom <input type="range" min="60" max="220" value={e.zoom ?? 100} onChange={(ev) => updateEx(page, e.id, { zoom: clamp(ev.target.value, 60, 220) })} /><span>{e.zoom ?? 100}%</span></label></div>}
       {e.image ? <><img className="draggable-photo" src={e.image.url ?? e.image} alt={e.image.name ?? 'exercice'} draggable="false" onMouseDown={(ev) => startPhotoDrag(ev, page, e)} style={{ transform: `translate(${e.x ?? 0}px, ${e.y ?? 0}px) scale(${(e.zoom ?? 100) / 100})` }} />{(e.masks ?? []).map((m) => <div className="white-mask" key={m.id} onMouseDown={(ev) => startMaskDrag(ev, page, e.id, m)} style={{ left: `${m.x}px`, top: `${m.y}px`, width: `${m.width}px`, height: `${m.height}px` }}><button type="button" className="mask-delete-button" onMouseDown={(ev) => ev.stopPropagation()} onClick={(ev) => { ev.stopPropagation(); deleteMask(page, e.id, m.id); }}>×</button><span className="mask-resize-handle" onMouseDown={(ev) => startMaskResize(ev, page, e.id, m)} /></div>)}</> : <div className="empty-zone">Clique ici pour choisir la photo</div>}
@@ -189,7 +211,7 @@ export default function App6() {
     <section className="panel">
       <p className="eyebrow">A4 Exam Maker</p><h1>Créer une feuille A4 avec entête fixe</h1><p className="intro">Choisis le type de devoir, puis le nombre d’exercices par page.</p>
       <div className="form-group"><label>Type de devoir</label><div className="duration-control compact-control assignment-control"><button onClick={() => { setKind('individual'); setTitle(IND_TITLE); }} disabled={kind === 'individual'}>Individuel</button><button onClick={() => { setKind('homework'); setTitle(HOME_TITLE); }} disabled={kind === 'homework'}>À la maison</button></div></div>
-      {kind !== 'homework' && <p className="points-total locked">Total général bloqué : {fmt(total)}</p>}
+      {kind !== 'homework' && <><label className="total-mode-control"><input type="checkbox" checked={totalLocked} onChange={(ev) => changeTotalLock(ev.target.checked)} /> Total bloqué à 20 points</label><p className={`points-total ${totalLocked ? 'locked' : 'free'}`}>{totalLocked ? 'Total général bloqué : ' : 'Total général libre : '}{fmt(total)}</p></>}
       <section className="exercise-count-section"><h2>Nombre d’exercices</h2><div className="page-count-grid">{pages.map((p, i) => <div className="page-count-card" key={i}><label>Page {i + 1}</label><div className="duration-control compact-control"><button onClick={() => setCount(i, -1)} disabled={p.length === (i === 0 ? 1 : 0)}>−</button><strong>{p.length}</strong><button onClick={() => setCount(i, 1)} disabled={p.length === MAX_EX}>+</button></div></div>)}</div></section>
       {active.flatMap((page) => pages[page].map((e) => <input key={e.id} ref={(n) => { fileRefs.current[e.id] = n; }} className="hidden-file-input" type="file" accept="image/*" onChange={(ev) => changeImage(page, e.id, ev.target.files?.[0])} />))}
       <button onClick={preview} disabled={exporting}>{exporting ? 'Préparation...' : 'Voir PDF'}</button><button className="secondary" onClick={download} disabled={exporting}>{exporting ? 'Export en cours...' : 'Exporter PDF A4'}</button>
