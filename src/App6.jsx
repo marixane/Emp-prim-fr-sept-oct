@@ -9,8 +9,10 @@ const H1 = 990;
 const HN = 840;
 const MIN_H = 120;
 const DURATIONS = ['30 min', '1 h', '1 h 30', '2 h', '2 h 30', '3 h', '3 h 30', '4 h'];
-const IND_TITLE = 'Devoir individuel de Mathématique\nN°: 1 Semestre: 1';
-const HOME_TITLE = 'Devoir à la maison de Mathématique\nN°: 1 Semestre: 1';
+const IND_TITLE_TOP = 'Devoir individuel';
+const HOME_TITLE_TOP = 'Devoir à la maison';
+const TITLE_MIDDLE = 'Mathématique';
+const TITLE_BOTTOM = 'N° : 1 Semestre : 1';
 
 const clamp = (v, a, b) => Math.min(Math.max(Number(v), a), b);
 const fmt = (v) => {
@@ -30,12 +32,13 @@ const blankEx = () => ({ ...ex(0, 0), blank: true });
 const exs = (n) => pts(n).map((p, i) => ex(i, p));
 const heights = (n, h) => n ? Array.from({ length: n }, (_, i) => i === n - 1 ? h - Math.floor(h / n) * (n - 1) : Math.floor(h / n)) : [];
 const visibleCount = (p) => p.filter((e) => !e.blank).length;
-const titleSize = (t) => t.length > 115 ? 11 : t.length > 90 ? 12 : t.length > 65 ? 14 : t.length > 42 ? 16 : 18;
 const profSize = (t) => t.length > 38 ? 12 : t.length > 26 ? 14 : 16;
 
 export default function App6() {
   const [kind, setKind] = useState('individual');
-  const [title, setTitle] = useState(IND_TITLE);
+  const [titleTop, setTitleTop] = useState(IND_TITLE_TOP);
+  const [titleMiddle, setTitleMiddle] = useState(TITLE_MIDDLE);
+  const [titleBottom, setTitleBottom] = useState(TITLE_BOTTOM);
   const [level, setLevel] = useState('Classes : 2 Bac SPF');
   const [teacher, setTeacher] = useState('Prof : Marwane.R\nLycée El jamai ,Tanger');
   const [duration, setDuration] = useState(3);
@@ -223,13 +226,13 @@ export default function App6() {
   return <main className={`app-shell ${resize ? 'is-resizing' : ''}`} onMouseMove={(ev) => { moveDrag(ev); moveResize(ev); }} onMouseUp={stopMove} onMouseLeave={stopMove}>
     <section className="panel">
       <p className="eyebrow">A4 Exam Maker</p><h1>Créer une feuille A4 avec entête fixe</h1><p className="intro">Choisis le type de devoir, puis le nombre d’exercices par page.</p>
-      <div className="form-group"><label>Type de devoir</label><div className="duration-control compact-control assignment-control"><button onClick={() => { setKind('individual'); setTitle(IND_TITLE); }} disabled={kind === 'individual'}>Individuel</button><button onClick={() => { setKind('homework'); setTitle(HOME_TITLE); }} disabled={kind === 'homework'}>À la maison</button></div></div>
+      <div className="form-group"><label>Type de devoir</label><div className="duration-control compact-control assignment-control"><button onClick={() => { setKind('individual'); setTitleTop(IND_TITLE_TOP); }} disabled={kind === 'individual'}>Individuel</button><button onClick={() => { setKind('homework'); setTitleTop(HOME_TITLE_TOP); }} disabled={kind === 'homework'}>À la maison</button></div></div>
       {kind !== 'homework' && <><label className="total-mode-control"><input type="checkbox" checked={totalLocked} onChange={(ev) => changeTotalLock(ev.target.checked)} />{totalLocked ? 'Total bloqué : ' : 'Total libre : '}{fmt(total)}</label><p className={`points-total ${totalLocked ? 'locked' : 'free'}`}>{totalLocked ? 'Total général bloqué : ' : 'Total général libre : '}{fmt(total)}</p></>}
       <button type="button" className={`pdf-lines-toggle ${pdfLines ? 'on' : 'off'}`} onClick={() => setPdfLines((v) => !v)}>{pdfLines ? 'Lignes visibles dans le PDF' : 'Lignes masquées dans le PDF'}</button>
       <section className="exercise-count-section"><h2>Nombre d’exercices</h2><div className="page-count-grid">{pages.map((p, i) => <div className="page-count-card" key={i}><label>Page {i + 1}</label><div className="duration-control compact-control"><button onClick={() => setCount(i, -1)} disabled={visibleCount(p) === 0}>−</button><strong>{visibleCount(p)}</strong><button onClick={() => setCount(i, 1)} disabled={visibleCount(p) === MAX_EX || (i > 0 && visibleCount(pages[0]) === 0)}>+</button></div></div>)}</div></section>
       {active.flatMap((page) => pages[page].map((e) => <input key={e.id} ref={(n) => { fileRefs.current[e.id] = n; }} className="hidden-file-input" type="file" accept="image/*" onChange={(ev) => changeImage(page, e.id, ev.target.files?.[0])} />))}
       <button onClick={preview} disabled={exporting}>{exporting ? 'Préparation...' : 'Voir PDF'}</button><button className="secondary" onClick={download} disabled={exporting}>{exporting ? 'Export en cours...' : 'Exporter PDF A4'}</button>
     </section>
-    <section className="preview-zone">{active.map((page, order) => <div className={`a4-page exam-page ${page === 0 ? '' : 'second-page'} ${exporting ? 'is-exporting' : ''} ${exporting && !pdfLines ? 'no-pdf-lines' : ''}`} key={page} ref={(n) => { pageRefs.current[page] = n; }}>{page === 0 && <header className="exam-header three-cell-header"><div className="header-cell left-header-cell class-duration-header"><textarea className="inline-class-input" value={level} onChange={(e) => setLevel(e.target.value)} rows="1" /><div className="tiny-duration-control"><button onClick={() => setDuration((d) => clamp(d - 1, 0, DURATIONS.length - 1))}>−</button><strong>{DURATIONS[duration]}</strong><button onClick={() => setDuration((d) => clamp(d + 1, 0, DURATIONS.length - 1))}>+</button></div></div><div className="header-cell middle-header-cell"><textarea className="inline-title-input" value={title} onChange={(e) => setTitle(e.target.value)} rows="2" style={{ fontSize: `${titleSize(title)}px` }} /></div><div className="header-cell right-header-cell"><textarea className="inline-prof-input" value={teacher} onChange={(e) => setTeacher(e.target.value)} rows="2" style={{ fontSize: `${profSize(teacher)}px` }} /></div></header>}{renderList(page)}<div className="page-number">Page {order + 1}/{active.length}</div></div>)}</section>
+    <section className="preview-zone">{active.map((page, order) => <div className={`a4-page exam-page ${page === 0 ? '' : 'second-page'} ${exporting ? 'is-exporting' : ''} ${exporting && !pdfLines ? 'no-pdf-lines' : ''}`} key={page} ref={(n) => { pageRefs.current[page] = n; }}>{page === 0 && <header className="exam-header three-cell-header"><div className="header-cell left-header-cell class-duration-header"><textarea className="inline-class-input" value={level} onChange={(e) => setLevel(e.target.value)} rows="1" /><div className="tiny-duration-control"><button onClick={() => setDuration((d) => clamp(d - 1, 0, DURATIONS.length - 1))}>−</button><strong>{DURATIONS[duration]}</strong><button onClick={() => setDuration((d) => clamp(d + 1, 0, DURATIONS.length - 1))}>+</button></div></div><div className="header-cell middle-header-cell split-title-cell"><textarea className="inline-title-input title-line title-line-top" value={titleTop} onChange={(e) => setTitleTop(e.target.value)} rows="1" /><textarea className="inline-title-input title-line title-line-middle" value={titleMiddle} onChange={(e) => setTitleMiddle(e.target.value)} rows="1" /><textarea className="inline-title-input title-line title-line-bottom" value={titleBottom} onChange={(e) => setTitleBottom(e.target.value)} rows="1" /></div><div className="header-cell right-header-cell"><textarea className="inline-prof-input" value={teacher} onChange={(e) => setTeacher(e.target.value)} rows="2" style={{ fontSize: `${profSize(teacher)}px` }} /></div></header>}{renderList(page)}<div className="page-number">Page {order + 1}/{active.length}</div></div>)}</section>
   </main>;
 }
