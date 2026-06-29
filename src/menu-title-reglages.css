@@ -1,0 +1,12 @@
+.panel .eyebrow {
+  display: block !important;
+  margin: 0 0 8px 0 !important;
+  padding: 6px 4px !important;
+  color: #111827 !important;
+  font-size: 17px !important;
+  font-weight: 900 !important;
+  line-height: 1.1 !important;
+  text-align: center !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
