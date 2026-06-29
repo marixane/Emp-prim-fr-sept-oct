@@ -5,7 +5,7 @@ import jsPDF from 'jspdf';
 const MAX_PAGES = 6;
 const MAX_EX = 6;
 const TOTAL = 20;
-const H1 = 986;
+const H1 = 990;
 const HN = 840;
 const MIN_H = 120;
 const DURATIONS = ['30 min', '1 h', '1 h 30', '2 h', '2 h 30', '3 h'];
