@@ -1,0 +1,9 @@
+body:has(.pdf-lines-toggle.off) .exam-page .exercise-body {
+  background-image: none !important;
+  background-color: #ffffff !important;
+}
+
+body:has(.pdf-lines-toggle.off) .exam-page.is-exporting .exercise-body {
+  background-image: none !important;
+  background-color: #ffffff !important;
+}
