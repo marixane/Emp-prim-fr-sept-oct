@@ -20,6 +20,7 @@ import './live-lines-toggle.css';
 import './compact-side-menu.css';
 import './homework-hide-ribbon.js';
 import './points-buttons-hitbox.css';
+import './clear-bar-marks-on-exercise-count.js';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
