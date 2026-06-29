@@ -34,6 +34,7 @@ import './note-scale-buttons.css';
 import './note-counter-pts.js';
 import './hide-single-page-number.css';
 import './hide-single-page-number.js';
+import './page-count-singular.js';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
