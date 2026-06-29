@@ -4,12 +4,12 @@
 }
 
 .exam-header.three-cell-header {
-  height: 76px !important;
+  height: 72px !important;
 }
 
 .exam-header .header-cell {
-  padding-top: 5px !important;
-  padding-bottom: 5px !important;
+  padding-top: 4px !important;
+  padding-bottom: 3px !important;
 }
 
 .exam-header .header-cell:first-child {
