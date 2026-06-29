@@ -6,6 +6,7 @@ import './compact-exercise.css';
 import './test-title.css';
 import './dark-background.css';
 import './photo-controls-opaque.css';
+import './page-status.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
