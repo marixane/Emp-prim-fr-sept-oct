@@ -21,11 +21,14 @@
 
 .bar-buttons {
   opacity: 0 !important;
-  pointer-events: none !important;
+  pointer-events: auto !important;
+  padding: 12px 12px 10px !important;
+  margin: -12px -12px -10px !important;
+  border-radius: 14px !important;
 }
 
-.clickable-photo-zone:hover .bar-buttons,
-.bar-buttons:hover {
+.bar-buttons:hover,
+.bar-buttons:focus-within {
   opacity: 1 !important;
   pointer-events: auto !important;
 }
