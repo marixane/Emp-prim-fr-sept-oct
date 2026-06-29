@@ -239,10 +239,10 @@
   top: 0;
   bottom: 0;
   width: 33px;
-  border-left: 2px solid rgba(120, 120, 120, 0.42);
-  border-right: 2px solid rgba(120, 120, 120, 0.42);
-  background: linear-gradient(to right, rgba(150, 150, 150, 0.03), rgba(150, 150, 150, 0.15), rgba(150, 150, 150, 0.03));
-  z-index: 2;
+  border-left: 2px solid #9a9a9a;
+  border-right: 2px solid #9a9a9a;
+  background: #eeeeee;
+  z-index: 25;
   pointer-events: none;
 }
 
@@ -269,7 +269,8 @@
 }
 
 .exam-page.is-exporting.has-bar-ribbon .exercise-body::before {
-  z-index: 2;
+  background: #eeeeee !important;
+  z-index: 25 !important;
 }
 
 .exam-page.is-exporting.no-pdf-lines .exercise-body {
