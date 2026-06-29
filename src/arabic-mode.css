@@ -32,9 +32,9 @@ body.arabic-mode .exam-page.has-bar-ribbon .exercise-body::before {
   left: auto !important;
   right: -4mm !important;
   width: 33px !important;
-  background: linear-gradient(to right, #eeeeee 0, #eeeeee calc(100% - 4px), #111111 calc(100% - 4px), #111111 100%) !important;
+  background: #eeeeee !important;
   border-left: 2px solid #9a9a9a !important;
-  border-right: 0 !important;
+  border-right: 2px solid #9a9a9a !important;
   box-shadow: none !important;
   z-index: 46 !important;
 }
@@ -63,7 +63,8 @@ body.arabic-mode .exam-page.has-bar-ribbon .exercise-body {
 }
 
 body.arabic-mode .exam-page.has-bar-ribbon .exam-exercise {
-  border-right-color: transparent !important;
+  border-right: 2px solid #111111 !important;
+  border-right-color: #111111 !important;
 }
 
 body.arabic-mode .exam-page.has-bar-ribbon .bar-buttons {
