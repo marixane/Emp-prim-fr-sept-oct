@@ -48,14 +48,6 @@ import './pdf-exercise-points-clean.css';
 import './homework-exercise-title-fix.css';
 import './bar-ribbon-label.css';
 import './arabic-mode.css';
-import './arabic-prof-line.css';
-import './french-header-swap.css';
-import './header-default-texts.js';
-import './no-title-points.css';
-import './arabic-mode.js';
+import './a4-overview.js';
 
-createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);
