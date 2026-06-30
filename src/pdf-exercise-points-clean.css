@@ -9,7 +9,7 @@
 
 .exam-page.is-exporting .exercise-title-controls .points-decoration:first-of-type {
   grid-column: 2 !important;
-  transform: none !important;
+  transform: translateY(-1mm) !important;
   width: auto !important;
   min-width: auto !important;
   margin-right: 4px !important;
@@ -21,11 +21,12 @@
   min-width: auto !important;
   max-width: none !important;
   padding: 0 !important;
+  transform: translateY(-1mm) !important;
 }
 
 .exam-page.is-exporting .exercise-title-controls .points-decoration:last-of-type {
   grid-column: 4 !important;
-  transform: none !important;
+  transform: translateY(-1mm) !important;
   width: auto !important;
   min-width: auto !important;
   margin-left: 4px !important;
