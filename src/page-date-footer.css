@@ -27,7 +27,7 @@ body.hide-page-date .page-date {
 .page-date-control {
   display: block !important;
   width: 100% !important;
-  margin-top: 4px !important;
+  margin-top: auto !important;
   padding: 6px !important;
   border-radius: 9px !important;
   background: #ecfdf5 !important;
@@ -39,6 +39,7 @@ body.hide-page-date .page-date {
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08) !important;
   cursor: pointer !important;
   text-align: center !important;
+  order: 998 !important;
 }
 
 .page-date-control.off {
