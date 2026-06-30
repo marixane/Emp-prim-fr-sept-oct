@@ -256,7 +256,7 @@ body.a4-overview-mode .preview-zone {
 }
 
 body.a4-overview-mode .preview-zone .exam-page {
-  zoom: 0.75 !important;
+  zoom: 0.32 !important;
   transform-origin: top left !important;
   margin-right: 0 !important;
   margin-bottom: 0 !important;
@@ -264,15 +264,15 @@ body.a4-overview-mode .preview-zone .exam-page {
 }
 
 body.a4-overview-mode.a4-overview-zoom-1 .preview-zone .exam-page {
-  zoom: 1 !important;
+  zoom: 0.55 !important;
 }
 
 body.a4-overview-mode.a4-overview-zoom-2 .preview-zone .exam-page {
-  zoom: 0.75 !important;
+  zoom: 0.42 !important;
 }
 
 body.a4-overview-mode.a4-overview-zoom-3 .preview-zone .exam-page {
-  zoom: 0.5 !important;
+  zoom: 0.32 !important;
 }
 
 body.a4-overview-mode.a4-overview-zoom-4 .preview-zone .exam-page {
