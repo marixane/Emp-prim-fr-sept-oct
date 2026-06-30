@@ -102,7 +102,7 @@ function syncLanguageButton() {
     individualButton = document.createElement('button');
     individualButton.className = 'individual-toggle';
     individualButton.type = 'button';
-    individualButton.textContent = 'Individel';
+    individualButton.textContent = 'Devoir\nindividuel';
     individualButton.addEventListener('click', function () {
       document.body.classList.toggle('no-title-points');
       var active = document.body.classList.contains('no-title-points');
