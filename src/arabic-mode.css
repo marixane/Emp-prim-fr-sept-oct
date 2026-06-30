@@ -20,12 +20,6 @@
   display: none !important;
 }
 
-body.arabic-mode .language-toggle {
-  background: #ecfdf5 !important;
-  border-color: #86efac !important;
-  color: #065f46 !important;
-}
-
 body.arabic-mode .tiny-duration-control strong {
   direction: rtl !important;
   unicode-bidi: isolate !important;
