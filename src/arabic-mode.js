@@ -4,6 +4,7 @@ const FR_HEADER = {
   rightTop: 'Lycée El jamai ,Tanger',
   rightBottom: 'N° : 1 Semestre : 1',
   individualTitle: 'Devoir individuel',
+  homeworkTitle: 'Devoir à la maison',
   subject: 'Mathématique',
   level: 'Classe : 2 Bac SPF'
 };
@@ -12,6 +13,7 @@ const AR_HEADER = {
   rightTop: 'ثانوية الجامعي، طنجة',
   rightBottom: 'مادة : الرياضيات',
   individualTitle: 'فرض محروس',
+  homeworkTitle: 'فرض منزلي',
   subject: 'رقم 1 الدورة 1',
   level: 'قسم : 2 باك ع.ف'
 };
@@ -47,7 +49,9 @@ function syncHeaderLanguage() {
   if (titleTop) {
     var currentTop = titleTop.value || '';
     var isIndividual = currentTop === FR_HEADER.individualTitle || currentTop === AR_HEADER.individualTitle;
+    var isHomework = currentTop === FR_HEADER.homeworkTitle || currentTop === AR_HEADER.homeworkTitle;
     if (isIndividual) setInputValue('.title-line-top', header.individualTitle);
+    if (isHomework) setInputValue('.title-line-top', header.homeworkTitle);
   }
 
   var titleMiddle = document.querySelector('.title-line-middle');
@@ -103,6 +107,21 @@ function syncLanguageMode() {
   syncExerciseTitles();
   if (typeof formatExercisePointLabels === 'function') formatExercisePointLabels();
 }
+
+document.addEventListener('click', function (event) {
+  var button = event.target && event.target.closest && event.target.closest('.assignment-control button');
+  if (!button) return;
+  var text = (button.textContent || '').toLowerCase();
+  if (!text.includes('maison')) return;
+
+  var ribbonToggle = document.querySelector('.bar-ribbon-toggle.on');
+  if (ribbonToggle) ribbonToggle.click();
+
+  setTimeout(function () {
+    if (window.__examLanguage === 'ar') setInputValue('.title-line-top', AR_HEADER.homeworkTitle);
+    syncHeaderLanguage();
+  }, 0);
+}, true);
 
 syncLanguageMode();
 setTimeout(syncLanguageMode, 100);
