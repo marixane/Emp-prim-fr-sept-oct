@@ -1,5 +1,14 @@
+.exercise-title-controls:not(:has(strong)) span {
+  font-size: 0 !important;
+}
+
+.exercise-title-controls:not(:has(strong)) span::before {
+  content: 'Exercice :' !important;
+  font-size: 14px !important;
+}
+
 .exercise-title-controls:not(:has(strong)) span::after {
-  content: ' :' !important;
+  content: '' !important;
 }
 
 .exercise-title-controls:not(:has(strong)) {
