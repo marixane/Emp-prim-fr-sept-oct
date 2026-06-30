@@ -37,7 +37,7 @@
 }
 
 body.arabic-mode .bar-ribbon-toggle::after {
-  content: 'سُلَّم التنقيط';
+  content: '\0633\0644\0645 \0627\0644\062A\0646\0642\064A\0637';
 }
 
 body.arabic-mode .pdf-lines-toggle::after {
