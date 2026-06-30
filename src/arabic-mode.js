@@ -35,6 +35,11 @@ const DURATION_AR_TO_FR = Object.fromEntries(
   Object.entries(DURATION_FR_TO_AR).map(([fr, ar]) => [ar, fr])
 );
 
+function setText(node, value) {
+  if (!node || node.textContent === value) return;
+  node.textContent = value;
+}
+
 function setInputValue(selector, value) {
   var input = document.querySelector(selector);
   if (!input || input.value === value) return;
@@ -95,35 +100,39 @@ function syncPanelLabels() {
   var isArabic = window.__examLanguage === 'ar';
 
   var notesTitle = document.querySelector('.note-scale-title');
-  if (notesTitle) notesTitle.textContent = isArabic ? 'النقط :' : 'Notes :';
+  setText(notesTitle, isArabic ? 'النقط :' : 'Notes :');
 
   var linesButton = document.querySelector('.pdf-lines-toggle');
   if (linesButton) {
     var linesVisible = linesButton.classList.contains('on');
-    linesButton.textContent = isArabic
+    setText(linesButton, isArabic
       ? (linesVisible ? 'أسطر ظاهرة في PDF' : 'أسطر مخفية في PDF')
-      : (linesVisible ? 'Lignes visibles dans le PDF' : 'Lignes masquées dans le PDF');
+      : (linesVisible ? 'Lignes visibles dans le PDF' : 'Lignes masquées dans le PDF'));
   }
 
   var barButton = document.querySelector('.bar-ribbon-toggle');
   if (barButton) {
     var barVisible = barButton.classList.contains('on');
-    barButton.textContent = isArabic
+    setText(barButton, isArabic
       ? (barVisible ? 'سُلَّم التنقيط ظاهر' : 'سُلَّم التنقيط مخفي')
-      : (barVisible ? 'Ruban de barème visible' : 'Ruban de barème masqué');
+      : (barVisible ? 'Ruban de barème visible' : 'Ruban de barème masqué'));
   }
 
   var totalCounter = document.querySelector('.note-scale-counter');
   if (totalCounter) {
-    totalCounter.textContent = totalCounter.textContent
+    var totalText = totalCounter.textContent || '';
+    var nextTotalText = totalText
       .replace(/^Total\s*:/, isArabic ? 'المجموع :' : 'Total :')
       .replace(/^المجموع\s*:/, isArabic ? 'المجموع :' : 'Total :');
+    setText(totalCounter, nextTotalText);
   }
 
   document.querySelectorAll('.page-number').forEach(function (pageNumber) {
-    pageNumber.textContent = pageNumber.textContent
+    var pageText = pageNumber.textContent || '';
+    var nextPageText = pageText
       .replace(/^Page\s+/, isArabic ? 'الصفحة ' : 'Page ')
       .replace(/^الصفحة\s+/, isArabic ? 'الصفحة ' : 'Page ');
+    setText(pageNumber, nextPageText);
   });
 }
 
@@ -168,17 +177,17 @@ function syncLanguageButton() {
 
   var isActive = document.body.classList.contains('no-title-points');
   individualButton.classList.toggle('active', !isActive);
-  individualButton.textContent = window.__examLanguage === 'ar'
+  setText(individualButton, window.__examLanguage === 'ar'
     ? (isActive ? 'فرض\nمنزلي' : 'فرض\nمحروس')
-    : (isActive ? 'Devoir\nlibre' : 'Devoir\nindividuel');
-  button.textContent = window.__examLanguage === 'ar' ? 'Français' : 'العربية';
+    : (isActive ? 'Devoir\nlibre' : 'Devoir\nindividuel'));
+  setText(button, window.__examLanguage === 'ar' ? 'Français' : 'العربية');
 }
 
 function syncDurationLabels() {
   document.querySelectorAll('.tiny-duration-control strong').forEach(function (duration) {
     var text = (duration.textContent || '').trim();
     var next = window.__examLanguage === 'ar' ? DURATION_FR_TO_AR[text] : DURATION_AR_TO_FR[text];
-    if (next) duration.textContent = next;
+    if (next) setText(duration, next);
   });
 }
 
@@ -218,7 +227,7 @@ function syncExerciseTitles() {
     var next = window.__examLanguage === 'ar'
       ? '\u062a\u0645\u0631\u064a\u0646 ' + match[1] + (isHomeworkTitle ? '' : ' :')
       : 'Exercice ' + match[1] + (isHomeworkTitle ? '' : ' :');
-    if (span.textContent !== next) span.textContent = next;
+    setText(span, next);
   });
 }
 
@@ -235,16 +244,24 @@ function syncLanguageMode() {
   if (typeof formatExercisePointLabels === 'function') formatExercisePointLabels();
 }
 
+var queuedLanguageSync = false;
+function queueLanguageSync() {
+  if (queuedLanguageSync) return;
+  queuedLanguageSync = true;
+  requestAnimationFrame(function () {
+    queuedLanguageSync = false;
+    syncLanguageButton();
+    syncPanelLabels();
+    syncHeaderLanguage();
+    bindDurationButtons();
+    bindPanelButtons();
+    syncDurationLabels();
+    syncExerciseTitles();
+  });
+}
+
 syncLanguageMode();
 setTimeout(syncLanguageMode, 100);
 setTimeout(syncLanguageMode, 400);
 
-new MutationObserver(function () {
-  syncLanguageButton();
-  syncPanelLabels();
-  syncHeaderLanguage();
-  bindDurationButtons();
-  bindPanelButtons();
-  scheduleDurationSync();
-  syncExerciseTitles();
-}).observe(document.body, { childList: true, subtree: true });
+new MutationObserver(queueLanguageSync).observe(document.body, { childList: true, subtree: true });
