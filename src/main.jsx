@@ -53,6 +53,7 @@ import './homework-exercise-title-fix.css';
 import './bar-ribbon-label.css';
 import './arabic-mode.css';
 import './arabic-mode.js';
+import './arabic-duration-stable.js';
 // import './a4-overview.js';
 import './active-settings-green.css';
 import './arabic-toggle-label-bigger.css';
