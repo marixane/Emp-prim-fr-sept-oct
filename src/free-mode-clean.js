@@ -1,11 +1,20 @@
+function getTitleModeValue() {
+  var title = document.querySelector('.title-line-top');
+  return ((title && (title.value || title.textContent)) || '').trim();
+}
+
 function isFreeModeActive() {
   var notes = document.querySelector('.note-scale-control:not(.homework-disabled-note)');
   if (!notes) return false;
 
-  var title = document.querySelector('.title-line-top');
-  var value = ((title && (title.value || title.textContent)) || '').trim();
+  var value = getTitleModeValue();
 
   return value === 'Devoir libre' || value === 'Devoir à la maison' || value === 'فرض منزلي';
+}
+
+function isIndividualModeActive() {
+  var value = getTitleModeValue();
+  return value === 'Devoir individuel' || value === 'فرض محروس';
 }
 
 function updateDisplay(node, hidden) {
@@ -24,6 +33,10 @@ function syncFreeModeBarRibbon(freeMode) {
   if (!button) return;
 
   if (freeMode && button.classList.contains('on')) {
+    button.click();
+  }
+
+  if (!freeMode && isIndividualModeActive() && button.classList.contains('off')) {
     button.click();
   }
 
@@ -71,6 +84,7 @@ document.addEventListener('click', function () {
 });
 
 document.addEventListener('input', function () {
+  setTimeout(syncFreeModeClean, 20);
   setTimeout(syncFreeModeClean, 80);
 });
 
