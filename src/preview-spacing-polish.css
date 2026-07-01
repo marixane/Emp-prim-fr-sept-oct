@@ -1,38 +1,70 @@
+body {
+  background: linear-gradient(135deg, #f8fafc 0%, #eef2f7 48%, #e2e8f0 100%) !important;
+}
+
 .app-shell {
-  gap: 38px !important;
-  align-items: flex-start !important;
+  display: grid !important;
+  grid-template-columns: 380px minmax(820px, 1fr) !important;
+  gap: 26px !important;
+  align-items: start !important;
+  padding: 12px 22px 120px 22px !important;
+  min-height: 100vh !important;
+}
+
+.panel {
+  position: sticky !important;
+  top: 12px !important;
+  align-self: start !important;
+  max-height: calc(100vh - 24px) !important;
+  overflow-y: auto !important;
+  border: 1px solid rgba(15, 23, 42, 0.12) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.14) !important;
 }
 
 .preview-zone {
   position: relative !important;
-  padding-left: 18px !important;
-  padding-bottom: 180px !important;
-  min-height: calc(100vh - 48px) !important;
-  scroll-padding-bottom: 180px !important;
+  overflow: auto !important;
+  min-height: calc(100vh - 24px) !important;
+  max-height: calc(100vh - 24px) !important;
+  padding: 0 0 240px 28px !important;
+  scroll-padding-top: 0 !important;
+  scroll-padding-bottom: 240px !important;
+  border-left: 5px solid rgba(15, 23, 42, 0.18) !important;
 }
 
 .preview-zone::before {
   content: '' !important;
   position: sticky !important;
   left: 0 !important;
-  top: 18px !important;
+  top: 0 !important;
   display: block !important;
   float: left !important;
-  width: 4px !important;
-  height: calc(100vh - 84px) !important;
-  min-height: 320px !important;
-  margin-left: -18px !important;
-  margin-right: 14px !important;
+  width: 5px !important;
+  height: calc(100vh - 24px) !important;
+  margin-left: -33px !important;
+  margin-right: 22px !important;
   border-radius: 999px !important;
-  background: linear-gradient(180deg, #111827, #64748b, #111827) !important;
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.6), 0 8px 24px rgba(15,23,42,0.22) !important;
+  background: linear-gradient(180deg, #0f172a, #94a3b8, #0f172a) !important;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.9), 0 10px 26px rgba(15,23,42,0.22) !important;
 }
 
 .a4-page {
-  margin-bottom: 160px !important;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.22) !important;
+  margin-top: 0 !important;
+  margin-bottom: 180px !important;
+  border-radius: 4px !important;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.24), 0 0 0 1px rgba(15, 23, 42, 0.08) !important;
 }
 
 .a4-page:last-child {
-  margin-bottom: 220px !important;
+  margin-bottom: 260px !important;
+}
+
+@media (max-width: 1250px) {
+  .app-shell {
+    grid-template-columns: 360px minmax(760px, 1fr) !important;
+    gap: 20px !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
 }
