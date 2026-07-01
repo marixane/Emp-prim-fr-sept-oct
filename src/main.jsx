@@ -56,6 +56,8 @@ import './arabic-mode.css';
 import './arabic-mode.js';
 import './arabic-duration-stable.js';
 import './resize-handle-hover-indicator.css';
+import './free-mode-clean.css';
+import './free-mode-clean.js';
 // import './a4-overview.js';
 import './active-settings-green.css';
 import './arabic-toggle-label-bigger.css';
