@@ -58,6 +58,8 @@ import './arabic-duration-stable.js';
 import './resize-handle-hover-indicator.css';
 import './free-mode-clean.css';
 import './free-mode-clean.js';
+import './homework-disabled-settings.css';
+import './homework-disabled-settings.js';
 // import './a4-overview.js';
 import './active-settings-green.css';
 import './arabic-toggle-label-bigger.css';
