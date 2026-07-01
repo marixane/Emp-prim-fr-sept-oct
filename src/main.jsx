@@ -13,7 +13,7 @@ import './header-duration-bigger.css';
 import './points-buttons-below.css';
 import './mobile-responsive.css';
 import './bar-mark-vertical.css';
-// import './bar-mark-click-guard.js';
+import './bar-mark-click-guard.js';
 import './photo-buttons-below-zoom.css';
 // import './clear-bar-marks-on-title-points.js';
 import './small-toggle-icons.css';
