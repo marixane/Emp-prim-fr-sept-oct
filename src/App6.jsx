@@ -121,6 +121,10 @@ export default function App6() {
     setPages((cur) => balance(cur, 20));
   };
   const changeNoteTotal = (targetTotal) => {
+    if (noteTotal === targetTotal) {
+      enterFreeMode();
+      return;
+    }
     setKind('individual');
     setTitleTop(IND_TITLE_TOP);
     setBarRibbon(true);
@@ -306,7 +310,7 @@ export default function App6() {
     <section className="panel">
       <p className="eyebrow">A4 Exam Maker</p><h1>Créer une feuille A4 avec entête fixe</h1><p className="intro">Choisis le type de devoir, puis le nombre d’exercices par page.</p>
       <div className="form-group"><label>Type de devoir</label><div className="duration-control compact-control assignment-control"><button type="button" onClick={enterIndividualMode} disabled={kind === 'individual' && noteTotal === 20 && titleTop === IND_TITLE_TOP}>Individuel</button><button type="button" onClick={() => { setKind('homework'); setTitleTop(HOME_TITLE_TOP); }} disabled={kind === 'homework'}>À la maison</button></div></div>
-      {kind !== 'homework' && <div className="note-scale-control"><div className="note-scale-title">Notes :</div><div className="note-scale-buttons"><button type="button" className={`note-scale-button ${noteTotal === 10 ? 'active' : ''}`} onClick={() => changeNoteTotal(10)}>Sur 10</button><button type="button" className={`note-scale-button ${noteTotal === 20 ? 'active' : ''}`} onClick={() => changeNoteTotal(20)}>Sur 20</button><button type="button" className={`note-scale-button ${!noteTotal ? 'active' : ''}`} onClick={enterFreeMode}>Devoir libre</button></div><div className="note-scale-counter">Total : {fmt(total)} {noteTotal ? `/ ${noteTotal}` : '/ libre'}</div></div>}
+      {kind !== 'homework' && <div className="note-scale-control"><div className="note-scale-title">Notes :</div><div className="note-scale-buttons"><button type="button" className={`note-scale-button ${noteTotal === 10 ? 'active' : ''}`} onClick={() => changeNoteTotal(10)}>Sur 10</button><button type="button" className={`note-scale-button ${noteTotal === 20 ? 'active' : ''}`} onClick={() => changeNoteTotal(20)}>Sur 20</button></div><div className="note-scale-counter">Total : {fmt(total)} {noteTotal ? `/ ${noteTotal}` : '/ libre'}</div></div>}
       <button type="button" className={`pdf-lines-toggle ${pdfLines ? 'on' : 'off'}`} onClick={() => setPdfLines((v) => !v)}>{pdfLines ? 'Lignes visibles dans le PDF' : 'Lignes masquées dans le PDF'}</button>
       <button type="button" className={`bar-ribbon-toggle ${barRibbon ? 'on' : 'off'}`} onClick={() => setBarRibbon((v) => !v)}>{barRibbon ? 'Ruban de barème visible' : 'Ruban de barème masqué'}</button>
       <section className="exercise-count-section"><h2>Nombre d’exercices</h2><div className="page-count-grid">{countPages.map(({ p, i }) => <div className="page-count-card" key={i}><label>Page {i + 1}</label><div className="duration-control compact-control"><button onClick={() => setCount(i, -1)} disabled={visibleCount(p) === 0}>−</button><strong>{visibleCount(p)}</strong><button onClick={() => setCount(i, 1)} disabled={visibleCount(p) === MAX_EX || (i > 0 && visibleCount(pages[0]) === 0)}>+</button></div></div>)}</div></section>
