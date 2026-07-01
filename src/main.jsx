@@ -28,8 +28,6 @@ import './exercise-under-header-spacing.css';
 import './exercise-top-border-fix.css';
 import './force-total-card.css';
 import './auto-scale-a4-preview.css';
-import './a4-zoom-degrees.css';
-import './a4-zoom-degrees.js';
 import './white-mask-fix.css';
 import './page-date-footer.css';
 import './page-date-footer-setting.js';
