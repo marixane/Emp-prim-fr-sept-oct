@@ -4,9 +4,7 @@ body {
 }
 
 .app-shell {
-  display: flex !important;
-  align-items: flex-start !important;
-  gap: 0 !important;
+  display: block !important;
   padding: 0 !important;
   height: 100vh !important;
   min-height: 100vh !important;
@@ -14,10 +12,10 @@ body {
 }
 
 .panel {
-  flex: 0 0 360px !important;
+  width: 380px !important;
   position: fixed !important;
-  left: 8px !important;
-  top: 8px !important;
+  left: 6px !important;
+  top: 6px !important;
   bottom: auto !important;
   max-height: none !important;
   overflow: visible !important;
@@ -29,13 +27,18 @@ body {
 }
 
 .preview-zone {
-  flex: 1 1 auto !important;
-  min-width: 820px !important;
-  height: 100vh !important;
-  max-height: 100vh !important;
+  position: fixed !important;
+  left: 390px !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  min-width: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  max-height: none !important;
   overflow: auto !important;
-  padding: 0 0 230px 8px !important;
-  margin: 0 0 0 376px !important;
+  padding: 0 0 230px 4px !important;
+  margin: 0 !important;
   border-left: 1px solid #cbd5e1 !important;
   background: #f8fafc !important;
   scroll-padding-top: 0 !important;
@@ -60,13 +63,12 @@ body {
 
 @media (max-width: 1250px) {
   .panel {
-    left: 6px !important;
-    flex-basis: 340px !important;
+    width: 360px !important;
+    left: 4px !important;
   }
 
   .preview-zone {
-    min-width: 790px !important;
-    padding-left: 6px !important;
-    margin-left: 352px !important;
+    left: 368px !important;
+    padding-left: 3px !important;
   }
 }
