@@ -19,9 +19,26 @@ function syncFreeModeBodyClass() {
   document.body.classList.toggle('no-title-points', isFreeModeActive());
 }
 
+function syncFreeModeBarRibbon(freeMode) {
+  var button = document.querySelector('.bar-ribbon-toggle');
+  if (!button) return;
+
+  if (freeMode && button.classList.contains('on')) {
+    button.click();
+  }
+
+  button.disabled = !!freeMode;
+  button.setAttribute('aria-disabled', freeMode ? 'true' : 'false');
+  button.style.pointerEvents = freeMode ? 'none' : '';
+  button.style.opacity = freeMode ? '0.45' : '';
+  button.style.cursor = freeMode ? 'not-allowed' : '';
+  button.title = freeMode ? 'Barème désactivé en devoir libre' : '';
+}
+
 function cleanFreeModeExerciseTitles() {
   var freeMode = isFreeModeActive();
   syncFreeModeBodyClass();
+  syncFreeModeBarRibbon(freeMode);
 
   document.querySelectorAll('.exam-exercise:not(.blank-exercise) .exercise-title-controls').forEach(function (title) {
     var span = title.querySelector('span:first-child');
@@ -59,3 +76,4 @@ document.addEventListener('input', function () {
 
 window.cleanFreeModeExerciseTitles = cleanFreeModeExerciseTitles;
 window.syncFreeModeBodyClass = syncFreeModeBodyClass;
+window.syncFreeModeBarRibbon = syncFreeModeBarRibbon;
