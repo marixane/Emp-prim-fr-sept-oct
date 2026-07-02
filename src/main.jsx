@@ -70,6 +70,7 @@ import './preview-spacing-polish.css';
 import './free-exercise-title-height.css';
 import './two-page-view.css';
 import './two-page-view.js';
+import './page-number-add-page.js';
 import './pdf-original-size-now.js';
 import './mobile-phone-settings.css';
 import './arabic-no-mirror.css';
