@@ -3,8 +3,9 @@ function applyMobilePhoneForce() {
   if (existing) existing.remove();
 
   var viewportWidth = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-  var availableWidth = Math.max(240, viewportWidth - 16);
+  var availableWidth = Math.max(240, viewportWidth - 18);
   var mobileScale = Math.min(1, Math.max(0.32, availableWidth / 794));
+  var scaledWidth = Math.ceil(794 * mobileScale);
   var mobileA4Gap = -Math.max(0, Math.round(1123 * (1 - mobileScale) - 40));
 
   var style = document.createElement('style');
@@ -195,9 +196,9 @@ function applyMobilePhoneForce() {
         max-height: 100vh !important;
         display: flex !important;
         flex-direction: column !important;
-        align-items: flex-start !important;
+        align-items: center !important;
         justify-content: flex-start !important;
-        justify-items: start !important;
+        justify-items: center !important;
         gap: 6px !important;
         padding: 0 0 40px 0 !important;
         margin: 0 !important;
@@ -213,9 +214,25 @@ function applyMobilePhoneForce() {
       body .a4-page {
         transform: scale(${mobileScale}) !important;
         transform-origin: top left !important;
+        width: 794px !important;
+        min-width: 794px !important;
+        max-width: 794px !important;
         margin: 0 0 ${mobileA4Gap}px 0 !important;
         flex: 0 0 auto !important;
         translate: 0 0 !important;
+      }
+
+      body .preview-zone .a4-page::before,
+      body .a4-page::before {
+        content: '' !important;
+        display: block !important;
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: ${scaledWidth}px !important;
+        height: 1px !important;
+        pointer-events: none !important;
+        opacity: 0 !important;
       }
 
       body .preview-zone .a4-page:last-child,
