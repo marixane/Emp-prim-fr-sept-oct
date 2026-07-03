@@ -1,4 +1,37 @@
 let lastMobilePdfRun = 0;
+let mobilePdfTouchArmed = false;
+
+function ensureMobilePdfStyle() {
+  let style = document.getElementById('mobile-pdf-touch-fix-style');
+  if (!style) {
+    style = document.createElement('style');
+    style.id = 'mobile-pdf-touch-fix-style';
+    document.head.appendChild(style);
+  }
+  style.textContent = `
+    @media (max-width: 1200px) {
+      .a4-footer-preview,
+      .a4-footer-export {
+        touch-action: manipulation !important;
+        -webkit-user-select: none !important;
+        user-select: none !important;
+        -webkit-tap-highlight-color: transparent !important;
+        cursor: pointer !important;
+      }
+      .a4-footer-preview::after,
+      .a4-footer-export::after {
+        content: '' !important;
+        position: absolute !important;
+        left: -14px !important;
+        right: -14px !important;
+        top: -14px !important;
+        bottom: -14px !important;
+        background: transparent !important;
+        pointer-events: auto !important;
+      }
+    }
+  `;
+}
 
 function getMobilePdfButton(target) {
   const button = target && target.closest && target.closest('.a4-footer-preview,.a4-footer-export');
@@ -9,20 +42,25 @@ function getMobilePdfButton(target) {
   };
 }
 
-function runMobilePdf(event) {
+function stopPdfTap(event) {
   const action = getMobilePdfButton(event.target);
-  if (!action) return;
-
+  if (!action) return null;
   event.preventDefault();
   event.stopPropagation();
   if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+  return action;
+}
+
+function runMobilePdf(event) {
+  const action = stopPdfTap(event);
+  if (!action) return;
 
   const now = Date.now();
-  if (now - lastMobilePdfRun < 500) return;
+  if (now - lastMobilePdfRun < 700) return;
   lastMobilePdfRun = now;
 
   if (typeof window.startExamPdf === 'function') {
-    window.startExamPdf(action.mode, action.button);
+    window.startExamPdf(action.mode);
     return;
   }
 
@@ -33,6 +71,28 @@ function runMobilePdf(event) {
   if (fallback && !fallback.disabled) fallback.click();
 }
 
-document.addEventListener('pointerdown', runMobilePdf, true);
-document.addEventListener('touchstart', runMobilePdf, { capture: true, passive: false });
-document.addEventListener('click', runMobilePdf, true);
+function armMobilePdf(event) {
+  const action = stopPdfTap(event);
+  if (!action) return;
+  mobilePdfTouchArmed = true;
+}
+
+function finishMobilePdf(event) {
+  const action = stopPdfTap(event);
+  if (!action) return;
+  if (!mobilePdfTouchArmed) return;
+  mobilePdfTouchArmed = false;
+  runMobilePdf(event);
+}
+
+ensureMobilePdfStyle();
+setTimeout(ensureMobilePdfStyle, 300);
+setTimeout(ensureMobilePdfStyle, 1000);
+window.addEventListener('resize', ensureMobilePdfStyle);
+document.addEventListener('touchstart', armMobilePdf, { capture: true, passive: false });
+document.addEventListener('touchend', finishMobilePdf, { capture: true, passive: false });
+document.addEventListener('pointerup', runMobilePdf, true);
+document.addEventListener('dblclick', stopPdfTap, true);
+document.addEventListener('gesturestart', function (event) {
+  if (getMobilePdfButton(event.target)) event.preventDefault();
+}, { capture: true, passive: false });
