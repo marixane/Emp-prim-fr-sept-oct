@@ -74,6 +74,7 @@ import './two-page-view.css';
 import './two-page-view.js';
 import './page-number-add-page.js';
 import './exercise-line-add-remove-controls.js';
+import './transparent-bar-points.css';
 import './fixed-button-positions.js';
 import './pdf-original-size-now.js';
 import './mobile-phone-settings.css';
