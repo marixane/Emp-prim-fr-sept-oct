@@ -108,7 +108,7 @@ function syncExerciseLineControls() {
     var controls = document.createElement('div');
     controls.className = 'exercise-line-count-overlay';
     controls.style.left = (rect.left + rect.width / 2) + 'px';
-    controls.style.top = (rect.top + Math.max(40, rect.height * 0.1)) + 'px';
+    controls.style.top = (rect.top + Math.max(10, rect.height * 0.1 - 30)) + 'px';
 
     var minus = makeButton('−', 'minus', pageIndex, '-');
     var plus = makeButton('+', 'plus', pageIndex, '+');
