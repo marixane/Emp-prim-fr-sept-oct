@@ -68,7 +68,7 @@ function runCountAction(pageIndex, wanted) {
 }
 
 function ensureExerciseLineControlStyle() {
-  var css = '.exercise-line-count-overlay{position:fixed!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:12px!important;z-index:99999!important;pointer-events:auto!important;transform:translateX(-50%)!important;opacity:0!important;transition:opacity .08s ease!important}.exercise-line-count-overlay.is-near,.exercise-line-count-overlay:hover{opacity:1!important}.exercise-line-count-overlay button{width:42px!important;min-width:42px!important;height:26px!important;min-height:26px!important;border-radius:6px!important;border:1px solid rgba(100,116,139,.7)!important;background:rgba(255,255,255,.75)!important;color:#0f172a!important;font-size:16px!important;font-weight:900!important;line-height:1!important;padding:0!important;margin:0!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;cursor:pointer!important;box-sizing:border-box!important;box-shadow:0 1px 3px rgba(15,23,42,.12)!important;-webkit-tap-highlight-color:transparent!important}.exercise-line-count-overlay.is-near button,.exercise-line-count-overlay:hover button{background:#ffffff!important;border-color:#64748b!important;box-shadow:0 1px 3px rgba(15,23,42,.18)!important}.exercise-line-count-overlay button:hover{background:#e0f2fe!important;border-color:#2563eb!important;color:#1d4ed8!important}.exercise-line-count-overlay button.minus:hover{background:#fee2e2!important;border-color:#dc2626!important;color:#b91c1c!important}.exercise-line-count-overlay button:disabled{opacity:.25!important;cursor:not-allowed!important}@media(pointer:fine){.exercise-line-count-overlay{opacity:0!important}.exercise-line-count-overlay.is-near,.exercise-line-count-overlay:hover{opacity:1!important}}@media(max-width:1200px) and (pointer:coarse){.exercise-line-count-overlay{gap:10px!important;opacity:.12!important}.exercise-line-count-overlay.is-near,.exercise-line-count-overlay:hover{opacity:1!important}.exercise-line-count-overlay button{width:42px!important;min-width:42px!important;height:28px!important;min-height:28px!important;font-size:17px!important;border-radius:6px!important}}@media print{.exercise-line-count-overlay{display:none!important}}';
+  var css = '.exercise-line-count-overlay{position:fixed!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:12px!important;z-index:99999!important;pointer-events:auto!important;transform:translateX(-50%)!important;opacity:.22!important;transition:none!important}.exercise-line-count-overlay:hover,.exercise-line-count-overlay.is-near{opacity:.22!important}.exercise-line-count-overlay button{width:42px!important;min-width:42px!important;height:26px!important;min-height:26px!important;border-radius:6px!important;border:1px solid rgba(100,116,139,.35)!important;background:rgba(255,255,255,.32)!important;color:rgba(15,23,42,.45)!important;font-size:16px!important;font-weight:900!important;line-height:1!important;padding:0!important;margin:0!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;cursor:pointer!important;box-sizing:border-box!important;box-shadow:none!important;-webkit-tap-highlight-color:transparent!important}.exercise-line-count-overlay button:hover,.exercise-line-count-overlay button.minus:hover{background:rgba(255,255,255,.32)!important;border-color:rgba(100,116,139,.35)!important;color:rgba(15,23,42,.45)!important}.exercise-line-count-overlay button:disabled{opacity:.18!important;cursor:not-allowed!important}@media(max-width:1200px){.exercise-line-count-overlay{gap:10px!important;opacity:.28!important}.exercise-line-count-overlay:hover,.exercise-line-count-overlay.is-near{opacity:.28!important}.exercise-line-count-overlay button{width:42px!important;min-width:42px!important;height:28px!important;min-height:28px!important;font-size:17px!important;border-radius:6px!important}}@media print{.exercise-line-count-overlay{display:none!important}}';
   var style = document.getElementById('exercise-line-add-remove-style');
   if (!style) {
     style = document.createElement('style');
@@ -95,22 +95,6 @@ function makeButton(label, className, pageIndex, wanted) {
   return button;
 }
 
-function updateExerciseControlsVisibility(event) {
-  window.__lastExerciseMousePoint = event && typeof event.clientX === 'number' ? { x: event.clientX, y: event.clientY } : null;
-  var point = window.__lastExerciseMousePoint;
-  document.querySelectorAll('.exercise-line-count-overlay').forEach(function (controls) {
-    var rect = controls.getBoundingClientRect();
-    var inside = !!point && point.x >= rect.left && point.x <= rect.right && point.y >= rect.top && point.y <= rect.bottom;
-    controls.classList.toggle('is-near', inside);
-  });
-}
-
-if (!window.__exerciseControlTransparencyInstalled) {
-  window.__exerciseControlTransparencyInstalled = true;
-  document.addEventListener('mousemove', updateExerciseControlsVisibility, true);
-  document.addEventListener('mouseleave', function () { updateExerciseControlsVisibility(null); }, true);
-}
-
 function syncExerciseLineControls() {
   ensureExerciseLineControlStyle();
   document.querySelectorAll('.exercise-line-count-controls,.exercise-line-count-overlay').forEach(function (old) { old.remove(); });
@@ -135,10 +119,6 @@ function syncExerciseLineControls() {
     controls.appendChild(plus);
     document.body.appendChild(controls);
   });
-
-  if (window.__lastExerciseMousePoint) {
-    updateExerciseControlsVisibility({ clientX: window.__lastExerciseMousePoint.x, clientY: window.__lastExerciseMousePoint.y });
-  }
 }
 
 syncExerciseLineControls();
