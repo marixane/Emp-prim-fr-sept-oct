@@ -114,7 +114,7 @@ function syncPageNumberControls() {
     if (!rect.width || !rect.height) return;
 
     var controls = makeControls(pageNode);
-    controls.style.left = (rect.left + rect.width / 2 + 98) + 'px';
+    controls.style.left = (rect.left + rect.width / 2 + 128) + 'px';
     controls.style.top = (rect.bottom - 32) + 'px';
 
     var minus = controls.querySelector('.minus');
