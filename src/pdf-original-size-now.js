@@ -37,7 +37,7 @@ function stretchExtraPageForPdf(clone) {
   if (!exercises.length) return;
 
   const pageHeight = 1123;
-  const footerGap = 95;
+  const footerGap = 62;
   const top = list.offsetTop || 0;
   const gap = Math.max(0, (exercises.length - 1) * 2);
   const available = Math.max(120, pageHeight - top - footerGap);
@@ -59,6 +59,20 @@ function stretchExtraPageForPdf(clone) {
     exercise.style.setProperty('flex', '0 0 ' + h + 'px', 'important');
     exercise.style.setProperty('overflow', 'hidden', 'important');
   });
+}
+
+function addPdfBottomBorder(clone) {
+  const bottomLine = document.createElement('div');
+  bottomLine.className = 'pdf-page-bottom-border';
+  bottomLine.style.setProperty('position', 'absolute', 'important');
+  bottomLine.style.setProperty('left', '0', 'important');
+  bottomLine.style.setProperty('right', '0', 'important');
+  bottomLine.style.setProperty('bottom', '0', 'important');
+  bottomLine.style.setProperty('height', '1px', 'important');
+  bottomLine.style.setProperty('background', '#000', 'important');
+  bottomLine.style.setProperty('z-index', '999999', 'important');
+  bottomLine.style.setProperty('pointer-events', 'none', 'important');
+  clone.appendChild(bottomLine);
 }
 
 function preparePdfClone(original) {
@@ -92,6 +106,7 @@ function preparePdfClone(original) {
   clone.classList.toggle('no-pdf-lines', !!hideLines);
 
   if (original.classList.contains('second-page')) stretchExtraPageForPdf(clone);
+  addPdfBottomBorder(clone);
 
   return clone;
 }
