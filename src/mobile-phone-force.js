@@ -257,11 +257,25 @@ function applyMobilePhoneForce() {
   document.head.appendChild(style);
 }
 
-applyMobilePhoneForce();
-setTimeout(applyMobilePhoneForce, 100);
-setTimeout(applyMobilePhoneForce, 500);
-setTimeout(applyMobilePhoneForce, 1000);
-window.addEventListener('resize', applyMobilePhoneForce);
+function scheduleMobilePhoneForce() {
+  applyMobilePhoneForce();
+  requestAnimationFrame(applyMobilePhoneForce);
+  setTimeout(applyMobilePhoneForce, 50);
+  setTimeout(applyMobilePhoneForce, 150);
+  setTimeout(applyMobilePhoneForce, 350);
+  setTimeout(applyMobilePhoneForce, 700);
+  setTimeout(applyMobilePhoneForce, 1200);
+}
+
+scheduleMobilePhoneForce();
+setInterval(applyMobilePhoneForce, 800);
+window.addEventListener('load', scheduleMobilePhoneForce);
+window.addEventListener('resize', scheduleMobilePhoneForce);
 window.addEventListener('orientationchange', function () {
-  setTimeout(applyMobilePhoneForce, 80);
+  setTimeout(scheduleMobilePhoneForce, 80);
 });
+
+var mobileForceObserver = new MutationObserver(function () {
+  scheduleMobilePhoneForce();
+});
+mobileForceObserver.observe(document.documentElement, { childList: true, subtree: true });
