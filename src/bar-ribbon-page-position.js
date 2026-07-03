@@ -19,6 +19,18 @@ function findByText(selector, texts) {
   }) || null;
 }
 
+function getAssignmentButtons() {
+  return Array.from(document.querySelectorAll('.panel .assignment-control button'));
+}
+
+function getIndividualButton() {
+  return getAssignmentButtons()[0] || findByText('button', ['Individuel']) || null;
+}
+
+function getHomeworkButton() {
+  return getAssignmentButtons()[1] || findByText('button', ['À la maison']) || null;
+}
+
 function findNoteScaleOriginal(label) {
   return Array.from(document.querySelectorAll('.panel .note-scale-button')).find(function (button) {
     var text = String(button.textContent || '').trim();
@@ -43,7 +55,7 @@ function clickNoteTotalOnly(label) {
 }
 
 function isHomeworkMode() {
-  var homework = findByText('button', ['À la maison']);
+  var homework = getHomeworkButton();
   return !!(homework && homework.disabled);
 }
 
@@ -58,9 +70,10 @@ function updateAssignmentButton(button) {
 
 function clickAssignmentToggle(button) {
   var homeworkMode = isHomeworkMode();
-  var target = homeworkMode ? findByText('button', ['Individuel']) : findByText('button', ['À la maison']);
+  var target = homeworkMode ? getIndividualButton() : getHomeworkButton();
   if (target && !target.disabled) target.click();
   setTimeout(function () { updateAssignmentButton(button); }, 30);
+  setTimeout(function () { updateAssignmentButton(button); }, 120);
   setTimeout(syncA4ProxyControls, 80);
   setTimeout(syncA4ProxyControls, 250);
 }
