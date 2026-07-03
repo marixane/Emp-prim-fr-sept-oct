@@ -114,8 +114,8 @@ function syncExerciseLineControls() {
 
     var count = getVisibleExerciseCount(pageIndex);
     var realCount = getRealExerciseCount(pageIndex);
-    controls.style.left = (rect.left + rect.width / 2) + 'px';
-    controls.style.top = (rect.top + Math.max(64, rect.height * 0.1 + 24)) + 'px';
+    controls.style.left = (rect.left + rect.width / 2 - 300) + 'px';
+    controls.style.top = (rect.top + Math.max(84, rect.height * 0.1 + 44)) + 'px';
 
     var minus = controls.querySelector('.minus');
     var plus = controls.querySelector('.plus');
