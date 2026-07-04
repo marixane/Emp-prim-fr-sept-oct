@@ -83,21 +83,6 @@ export default function Tab() {
     } : row));
   };
 
-  const canExtendLeft = (row, hourIndex) => {
-    if (hourIndex <= 0) return false;
-    const cell = normalizeCell(row.cells[hours[hourIndex]]);
-    const previous = normalizeCell(row.cells[hours[hourIndex - 1]]);
-    return Boolean(cell.text.trim()) && !previous.hidden && !previous.text.trim();
-  };
-
-  const canExtendRight = (row, hourIndex) => {
-    const cell = normalizeCell(row.cells[hours[hourIndex]]);
-    const nextIndex = hourIndex + cell.span;
-    if (!cell.text.trim() || nextIndex >= hours.length) return false;
-    const next = normalizeCell(row.cells[hours[nextIndex]]);
-    return !next.hidden && !next.text.trim();
-  };
-
   const canPasteCell = (row, hourIndex, cellToPaste) => {
     const sourceCell = normalizeCell(cellToPaste);
     if (!sourceCell.text.trim()) return false;
@@ -165,81 +150,6 @@ export default function Tab() {
     setDragOverCell(null);
   };
 
-  const extendCellLeft = (dayIndex, hourIndex) => {
-    if (hourIndex <= 0) return;
-    setRows((current) => current.map((row, i) => {
-      if (i !== dayIndex || !canExtendLeft(row, hourIndex)) return row;
-      const currentHour = hours[hourIndex];
-      const previousHour = hours[hourIndex - 1];
-      const cell = normalizeCell(row.cells[currentHour]);
-
-      return {
-        ...row,
-        cells: {
-          ...row.cells,
-          [previousHour]: { ...cell, span: cell.span + 1, hidden: false },
-          [currentHour]: { ...createCell(), hidden: true }
-        }
-      };
-    }));
-  };
-
-  const extendCellRight = (dayIndex, hourIndex) => {
-    setRows((current) => current.map((row, i) => {
-      if (i !== dayIndex || !canExtendRight(row, hourIndex)) return row;
-      const currentHour = hours[hourIndex];
-      const cell = normalizeCell(row.cells[currentHour]);
-      const nextHour = hours[hourIndex + cell.span];
-
-      return {
-        ...row,
-        cells: {
-          ...row.cells,
-          [currentHour]: { ...cell, span: cell.span + 1, hidden: false },
-          [nextHour]: { ...createCell(), hidden: true }
-        }
-      };
-    }));
-  };
-
-  const shrinkCellLeft = (dayIndex, hourIndex) => {
-    setRows((current) => current.map((row, i) => {
-      if (i !== dayIndex) return row;
-      const currentHour = hours[hourIndex];
-      const cell = normalizeCell(row.cells[currentHour]);
-      if (cell.span <= 1 || hourIndex + 1 >= hours.length) return row;
-      const nextHour = hours[hourIndex + 1];
-
-      return {
-        ...row,
-        cells: {
-          ...row.cells,
-          [currentHour]: createCell(),
-          [nextHour]: { ...cell, span: cell.span - 1, hidden: false }
-        }
-      };
-    }));
-  };
-
-  const shrinkCellRight = (dayIndex, hourIndex) => {
-    setRows((current) => current.map((row, i) => {
-      if (i !== dayIndex) return row;
-      const currentHour = hours[hourIndex];
-      const cell = normalizeCell(row.cells[currentHour]);
-      if (cell.span <= 1) return row;
-      const releasedHour = hours[hourIndex + cell.span - 1];
-
-      return {
-        ...row,
-        cells: {
-          ...row.cells,
-          [currentHour]: { ...cell, span: cell.span - 1, hidden: false },
-          [releasedHour]: createCell()
-        }
-      };
-    }));
-  };
-
   return <main className="cahier-shell clean-cahier-shell">
     <section className="cahier-preview-zone">
       <div className="a4-page cahier-page">
@@ -287,12 +197,6 @@ export default function Tab() {
                     onClick={hasClass ? () => handleCellClick(dayIndex, hourIndex, cell) : undefined}
                     title={hasClass ? 'Cliquer pour sélectionner ou glisser pour dupliquer' : draggedCell ? 'Déposer ici pour dupliquer' : ''}
                   >
-                    {hasClass && <div className="span-tools no-print" onClick={(e) => e.stopPropagation()}>
-                      <button type="button" onClick={() => extendCellLeft(dayIndex, hourIndex)} disabled={!canExtendLeft(row, hourIndex)}>‹</button>
-                      {cell.span > 1 && <button type="button" className="span-remove-button" onClick={() => shrinkCellLeft(dayIndex, hourIndex)}>×‹</button>}
-                      {cell.span > 1 && <button type="button" className="span-remove-button" onClick={() => shrinkCellRight(dayIndex, hourIndex)}>×›</button>}
-                      <button type="button" onClick={() => extendCellRight(dayIndex, hourIndex)} disabled={!canExtendRight(row, hourIndex)}>›</button>
-                    </div>}
                     <textarea
                       value={cell.text}
                       onChange={(e) => updateCellText(dayIndex, hour, e.target.value)}
