@@ -20,13 +20,15 @@ body.cahier-tab-active .homework-entry.cahier-exam-entry .homework-date {
   background: rgba(219, 234, 254, 0.72) !important;
 }
 
-body.cahier-tab-active .homework-entry.cahier-exam-entry .homework-subject {
+body.cahier-tab-active .homework-entry.cahier-exam-entry .homework-subject,
+body.cahier-tab-active .homework-entry.cahier-extra-holiday-entry .homework-subject {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
 }
 
-body.cahier-tab-active .cahier-exam-cycle-pill {
+body.cahier-tab-active .cahier-exam-cycle-pill,
+body.cahier-tab-active .cahier-holiday-type-pill {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -34,13 +36,23 @@ body.cahier-tab-active .cahier-exam-cycle-pill {
   min-height: 32px !important;
   padding: 7px 12px !important;
   border-radius: 999px !important;
-  background: #dbeafe !important;
-  border: 1px solid rgba(37, 99, 235, 0.32) !important;
-  color: #1e3a8a !important;
   font-size: 15px !important;
   font-weight: 900 !important;
   text-transform: uppercase !important;
+}
+
+body.cahier-tab-active .cahier-exam-cycle-pill {
+  background: #dbeafe !important;
+  border: 1px solid rgba(37, 99, 235, 0.32) !important;
+  color: #1e3a8a !important;
   box-shadow: 0 2px 6px rgba(30, 58, 138, 0.12) !important;
+}
+
+body.cahier-tab-active .cahier-holiday-type-pill {
+  background: #ffedd5 !important;
+  border: 1px solid rgba(154, 52, 18, 0.28) !important;
+  color: #9a3412 !important;
+  box-shadow: 0 2px 6px rgba(154, 52, 18, 0.10) !important;
 }
 
 body.cahier-tab-active .homework-entry.cahier-extra-holiday-entry .homework-text {
