@@ -143,7 +143,7 @@ export default function Tab() {
       text: DOT_TEXT,
       color: HOMEWORK_COLORS[index]
     };
-  });
+  }).filter((entry) => entry.sessions.length > 0);
 
   const canExtendLeft = (row, hourIndex) => hourIndex > 0 && Boolean(normalizeCell(row.cells[hours[hourIndex]]).text.trim()) && !normalizeCell(row.cells[hours[hourIndex - 1]]).hidden && !normalizeCell(row.cells[hours[hourIndex - 1]]).text.trim();
   const canExtendRight = (row, hourIndex) => {
