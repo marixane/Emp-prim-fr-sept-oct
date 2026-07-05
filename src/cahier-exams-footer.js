@@ -63,15 +63,20 @@ const applyCahierExamsFooter = () => {
   if (!page.querySelector('.cahier-exams-footer')) page.append(buildExamTable());
 };
 
-const scheduleCahierExamsFooter = () => window.requestAnimationFrame(applyCahierExamsFooter);
+let examsFooterRaf = 0;
+const scheduleCahierExamsFooter = () => {
+  if (examsFooterRaf) return;
+  examsFooterRaf = window.requestAnimationFrame(() => {
+    examsFooterRaf = 0;
+    applyCahierExamsFooter();
+  });
+};
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', scheduleCahierExamsFooter, { once: true });
 } else {
   scheduleCahierExamsFooter();
 }
-
-setInterval(scheduleCahierExamsFooter, 700);
 
 new MutationObserver(scheduleCahierExamsFooter).observe(document.body, {
   childList: true,
