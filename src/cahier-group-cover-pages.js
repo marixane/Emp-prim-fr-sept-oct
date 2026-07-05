@@ -1,4 +1,4 @@
-const GROUP_COVER_COLORS = ['#dbeafe', '#dcfce7', '#fef3c7', '#fce7f3', '#ede9fe'];
+const GROUP_COVER_COLORS = ['#38bdf8', '#34d399', '#fbbf24', '#f472b6', '#a78bfa'];
 const GROUP_COVER_LOGO_PATH = '/Logo_AR_TM_V.png';
 
 const getHomeworkPageTitleForCover = (page) => String(
@@ -64,10 +64,6 @@ const buildGroupCoverPage = (title, index) => {
 
   logoRow.append(leftLogo, officialLogo, rightLogo);
 
-  const kicker = document.createElement('div');
-  kicker.className = 'cahier-group-cover-kicker';
-  kicker.textContent = 'Cahier de texte';
-
   const titleNode = document.createElement('div');
   titleNode.className = 'cahier-group-cover-title';
   titleNode.textContent = title;
@@ -84,7 +80,7 @@ const buildGroupCoverPage = (title, index) => {
     icons.append(span);
   });
 
-  card.append(logoRow, kicker, titleNode, subtitle, icons);
+  card.append(logoRow, titleNode, subtitle, icons);
   page.append(card);
   return page;
 };
