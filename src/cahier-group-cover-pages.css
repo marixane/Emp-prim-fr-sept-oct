@@ -135,6 +135,27 @@ body.cahier-tab-active .cahier-group-cover-icons span {
   font-size: 34px;
 }
 
+body.cahier-tab-active .homework-page.cahier-themed-group-page > div:first-child {
+  background: linear-gradient(90deg, var(--group-cover-color), color-mix(in srgb, var(--group-cover-color) 58%, white), var(--group-cover-color)) !important;
+  border: 3px solid color-mix(in srgb, var(--group-cover-color) 72%, #111827 16%) !important;
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--group-cover-color) 38%, transparent), inset 0 0 0 3px rgba(255,255,255,0.42) !important;
+  color: #0f172a !important;
+}
+
+body.cahier-tab-active .homework-page.cahier-themed-group-page > div:first-child > div:first-child {
+  color: #0f172a !important;
+  text-shadow: 0 2px 0 rgba(255,255,255,0.70) !important;
+}
+
+body.cahier-tab-active .homework-page.cahier-themed-group-page > div:first-child > div:nth-child(2) > div:first-child {
+  background: rgba(255,255,255,0.86) !important;
+  border-color: color-mix(in srgb, var(--group-cover-color) 42%, white) !important;
+}
+
+body.cahier-tab-active .homework-page.cahier-themed-group-page > div:first-child > div:nth-child(2) > div:first-child > div {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--group-cover-color) 88%, #16a34a), color-mix(in srgb, var(--group-cover-color) 54%, #22c55e)) !important;
+}
+
 @media print {
   body.cahier-tab-active .cahier-group-cover-page {
     page-break-after: always !important;
