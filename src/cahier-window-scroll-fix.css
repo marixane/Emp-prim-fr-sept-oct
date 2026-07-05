@@ -6,23 +6,58 @@ body,
 }
 
 body.cahier-tab-active {
-  overflow-y: scroll !important;
-  height: auto !important;
-  min-height: 100vh !important;
+  height: 100vh !important;
+  overflow: hidden !important;
 }
 
-body.cahier-tab-active #root,
-body.cahier-tab-active .app-shell,
-body.cahier-tab-active .cahier-shell,
-body.cahier-tab-active .clean-cahier-shell,
-body.cahier-tab-active .cahier-preview-zone {
-  height: auto !important;
-  max-height: none !important;
+body.cahier-tab-active #root {
+  height: 100vh !important;
+  overflow: hidden !important;
+}
+
+body.cahier-tab-active .app-tabs {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1000 !important;
+}
+
+body.cahier-tab-active .cahier-shell.clean-cahier-shell,
+body.cahier-tab-active .cahier-shell {
+  height: calc(100vh - 60px) !important;
+  max-height: calc(100vh - 60px) !important;
   min-height: 0 !important;
-  overflow-y: visible !important;
+  overflow: hidden !important;
+  padding: 16px 24px 24px !important;
+  box-sizing: border-box !important;
 }
 
+body.cahier-tab-active .clean-cahier-shell .cahier-preview-zone,
 body.cahier-tab-active .cahier-preview-zone {
+  height: 100% !important;
+  max-height: 100% !important;
+  min-height: 0 !important;
+  overflow-y: scroll !important;
   overflow-x: auto !important;
-  padding-bottom: 180px !important;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior: contain !important;
+  padding: 0 16px 180px !important;
+  box-sizing: border-box !important;
+  scrollbar-gutter: stable !important;
+}
+
+body.cahier-tab-active .clean-cahier-shell .cahier-preview-zone::after,
+body.cahier-tab-active .cahier-preview-zone::after {
+  content: '';
+  display: block;
+  height: 160px;
+  flex: 0 0 160px;
+}
+
+@media screen and (max-height: 820px) {
+  body.cahier-tab-active .cahier-shell.clean-cahier-shell,
+  body.cahier-tab-active .cahier-shell {
+    height: calc(100vh - 48px) !important;
+    max-height: calc(100vh - 48px) !important;
+    padding-top: 8px !important;
+  }
 }
