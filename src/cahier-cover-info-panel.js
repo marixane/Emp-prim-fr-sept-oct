@@ -27,62 +27,106 @@ const getCoverClasses = () => {
   return classes;
 };
 
-const makeCoverInfoRow = (label, value) => {
-  const row = document.createElement('div');
-  row.className = 'cover-info-row';
-  row.innerHTML = `<span>${label}</span><strong>${value}</strong>`;
-  return row;
+const removeCoverSubtitleText = (cover) => {
+  const forbiddenTexts = [
+    'Langue française',
+    'Enseignement – Apprentissage du',
+    'Français au cycle secondaire'
+  ];
+  Array.from(cover.children).forEach((child) => {
+    const text = String(child.textContent || '').trim();
+    if (forbiddenTexts.includes(text)) child.remove();
+  });
 };
 
-const ensureCoverInfoPanel = () => {
-  if (!document.body.classList.contains('cahier-tab-active')) return;
-  const cover = document.getElementById('cahier-cover-page');
-  if (!cover) return;
-
-  let panel = document.getElementById('cahier-cover-info-panel');
-  if (!panel) {
-    panel = document.createElement('div');
-    panel.id = 'cahier-cover-info-panel';
-    Object.assign(panel.style, {
-      position: 'absolute',
-      left: '76px',
-      right: '76px',
-      top: '748px',
-      minHeight: '70px',
-      padding: '14px 18px',
-      borderRadius: '18px',
-      background: 'rgba(255,255,255,0.54)',
-      border: '1px solid rgba(120, 90, 55, 0.22)',
-      boxShadow: '0 10px 24px rgba(70, 45, 25, 0.12)',
-      backdropFilter: 'blur(2px)',
-      color: '#111827',
-      fontFamily: 'Arial, sans-serif',
-      zIndex: '20'
-    });
-    cover.append(panel);
-  }
-
-  const teacher = getCoverHeaderValue(2, '........................................');
-  const school = getCoverHeaderValue(0, '........................................');
-  const classes = getCoverClasses();
-
-  panel.innerHTML = '';
-  const grid = document.createElement('div');
-  Object.assign(grid.style, {
+const makeInfoCard = ({ id, top, label, value }) => {
+  const card = document.createElement('div');
+  card.id = id;
+  Object.assign(card.style, {
+    position: 'absolute',
+    left: '76px',
+    right: '76px',
+    top,
+    minHeight: '42px',
+    padding: '10px 16px',
+    borderRadius: '16px',
+    background: 'rgba(255,255,255,0.56)',
+    border: '1px solid rgba(120, 90, 55, 0.24)',
+    boxShadow: '0 8px 18px rgba(70, 45, 25, 0.10)',
+    backdropFilter: 'blur(2px)',
+    color: '#111827',
+    fontFamily: 'Arial, sans-serif',
+    zIndex: '20',
     display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '10px 18px',
-    alignItems: 'start'
+    gridTemplateColumns: '150px 1fr',
+    alignItems: 'center',
+    gap: '10px',
+    boxSizing: 'border-box'
   });
-  grid.append(makeCoverInfoRow('Nom :', teacher), makeCoverInfoRow('Établissement :', school));
 
-  const classBlock = document.createElement('div');
-  Object.assign(classBlock.style, { gridColumn: '1 / -1' });
-  const classLabel = document.createElement('div');
-  classLabel.textContent = 'Classes :';
-  Object.assign(classLabel.style, { fontSize: '15px', fontWeight: '900', marginBottom: '8px', color: '#2f241c' });
+  const labelNode = document.createElement('span');
+  labelNode.textContent = label;
+  Object.assign(labelNode.style, {
+    fontSize: '16px',
+    fontWeight: '900',
+    color: '#2f241c'
+  });
+
+  const valueNode = document.createElement('strong');
+  valueNode.textContent = value;
+  Object.assign(valueNode.style, {
+    minHeight: '24px',
+    paddingBottom: '2px',
+    borderBottom: '1px dashed rgba(70,45,25,0.34)',
+    fontSize: '16px',
+    fontWeight: '800',
+    color: '#111827',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap'
+  });
+
+  card.append(labelNode, valueNode);
+  return card;
+};
+
+const makeClassesCard = (classes) => {
+  const card = document.createElement('div');
+  card.id = 'cahier-cover-classes-card';
+  Object.assign(card.style, {
+    position: 'absolute',
+    left: '76px',
+    right: '76px',
+    top: '820px',
+    minHeight: '90px',
+    padding: '12px 16px 14px',
+    borderRadius: '18px',
+    background: 'rgba(255,255,255,0.56)',
+    border: '1px solid rgba(120, 90, 55, 0.24)',
+    boxShadow: '0 8px 18px rgba(70, 45, 25, 0.10)',
+    backdropFilter: 'blur(2px)',
+    color: '#111827',
+    fontFamily: 'Arial, sans-serif',
+    zIndex: '20',
+    boxSizing: 'border-box'
+  });
+
+  const label = document.createElement('div');
+  label.textContent = 'Classes :';
+  Object.assign(label.style, {
+    fontSize: '16px',
+    fontWeight: '900',
+    marginBottom: '10px',
+    color: '#2f241c'
+  });
+
   const chips = document.createElement('div');
-  Object.assign(chips.style, { display: 'flex', flexWrap: 'wrap', gap: '7px', alignItems: 'center' });
+  Object.assign(chips.style, {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '8px',
+    alignItems: 'center'
+  });
 
   if (classes.length) {
     classes.forEach((className) => {
@@ -92,13 +136,13 @@ const ensureCoverInfoPanel = () => {
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '6px 10px',
+        padding: '7px 12px',
         borderRadius: '999px',
         background: getCoverClassColor(className),
         border: '1px solid rgba(17,17,17,0.18)',
         boxShadow: '0 3px 8px rgba(17,17,17,0.10)',
         color: '#111827',
-        fontSize: '13px',
+        fontSize: '14px',
         fontWeight: '900',
         textTransform: 'uppercase',
         lineHeight: '1'
@@ -112,22 +156,31 @@ const ensureCoverInfoPanel = () => {
     chips.append(empty);
   }
 
-  classBlock.append(classLabel, chips);
-  grid.append(classBlock);
-  panel.append(grid);
+  card.append(label, chips);
+  return card;
+};
 
-  panel.querySelectorAll('.cover-info-row').forEach((row) => {
-    Object.assign(row.style, {
-      display: 'grid',
-      gridTemplateColumns: '128px 1fr',
-      alignItems: 'center',
-      gap: '8px',
-      minHeight: '28px',
-      borderBottom: '1px dashed rgba(70,45,25,0.22)'
-    });
-    Object.assign(row.querySelector('span').style, { fontSize: '15px', fontWeight: '900', color: '#2f241c' });
-    Object.assign(row.querySelector('strong').style, { fontSize: '15px', fontWeight: '800', color: '#111827', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' });
-  });
+const ensureCoverInfoPanel = () => {
+  if (!document.body.classList.contains('cahier-tab-active')) return;
+  const cover = document.getElementById('cahier-cover-page');
+  if (!cover) return;
+
+  removeCoverSubtitleText(cover);
+
+  document.getElementById('cahier-cover-info-panel')?.remove();
+  document.getElementById('cahier-cover-name-card')?.remove();
+  document.getElementById('cahier-cover-school-card')?.remove();
+  document.getElementById('cahier-cover-classes-card')?.remove();
+
+  const teacher = getCoverHeaderValue(2, '........................................');
+  const school = getCoverHeaderValue(0, '........................................');
+  const classes = getCoverClasses();
+
+  cover.append(
+    makeInfoCard({ id: 'cahier-cover-name-card', top: '700px', label: 'Nom :', value: teacher }),
+    makeInfoCard({ id: 'cahier-cover-school-card', top: '758px', label: 'Établissement :', value: school }),
+    makeClassesCard(classes)
+  );
 };
 
 const scheduleCoverInfoPanel = () => window.requestAnimationFrame(ensureCoverInfoPanel);
