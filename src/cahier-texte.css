@@ -467,116 +467,66 @@ body.cahier-tab-active .exercise-line-count-overlay {
   overflow: hidden;
 }
 
-.activity-table {
-  width: 100%;
-  height: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-  font-family: 'Times New Roman', Times, serif;
-  color: #000;
+.homework-page {
+  padding: 0 18px;
+  font-family: Arial, sans-serif;
+  color: #4f5060;
 }
 
-.activity-table col,
-.activity-table th,
-.activity-table td {
-  border: 2px solid #fff;
+.homework-entry {
+  border-left: 6px solid var(--homework-color);
+  margin: 0 0 16px;
+  background: white;
 }
 
-.activity-table th,
-.activity-table td {
-  padding: 0;
-  background: #d8ddef;
-  vertical-align: top;
-}
-
-.activity-table thead th {
-  height: 45px;
-  background: #c9cce4;
-}
-
-.activity-table .activity-label-row th {
-  height: 42px;
-  background: #eef2f8;
-}
-
-.activity-label-row th:nth-child(1),
-.activity-label-row th:nth-child(2),
-.activity-label-row th:nth-child(3),
-.activity-table tbody td:nth-child(1),
-.activity-table tbody td:nth-child(2),
-.activity-table tbody td:nth-child(3) {
-  width: 7%;
-}
-
-.activity-label-row th:nth-child(4),
-.activity-table .activity-main-cell {
-  width: 58%;
-}
-
-.activity-label-row th:nth-child(5),
-.activity-table tbody td:nth-child(5) {
-  width: 21%;
-}
-
-.activity-table tbody tr {
-  height: 172px;
-}
-
-.activity-table tbody tr:nth-child(even) td {
-  background: #eef2f8;
-}
-
-.activity-table textarea {
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 6px 7px;
-  border: 0;
-  resize: none;
-  overflow: hidden;
-  background: transparent;
-  color: #000;
-  font-family: 'Times New Roman', Times, serif;
-  font-size: 16px;
-  font-weight: 800;
-  line-height: 1.12;
+.homework-date {
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  padding: 0 0 0 30px;
+  border-bottom: 1.5px dashed var(--homework-color);
+  color: var(--homework-color);
+  font-family: 'Comic Sans MS', 'Marker Felt', cursive;
+  font-size: 22px;
+  font-weight: 900;
+  text-transform: uppercase;
   outline: none;
 }
 
-.activity-top-row th,
-.activity-label-row th {
-  position: relative;
+.homework-content {
+  display: grid;
+  grid-template-columns: 26% 74%;
+  min-height: 122px;
+  border-bottom: 1px solid #e8e8e8;
 }
 
-.activity-top-row textarea,
-.activity-label-row textarea {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  height: auto;
-  min-height: 0;
-  max-height: none;
-  padding: 0 4px;
-  text-align: center;
-  overflow: hidden;
-  font-size: 22px;
+.homework-subject {
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+  border-right: 1px solid #e6e6e6;
+  color: #3f4050;
+  font-size: 24px;
   font-weight: 900;
-  line-height: 1.05;
-  white-space: pre-wrap;
+  line-height: 1.35;
+  white-space: pre-line;
+  outline: none;
 }
 
-.activity-label-row th:last-child textarea {
-  font-size: 18px;
-  line-height: 1.15;
+.homework-text {
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  color: #666676;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.45;
+  outline: none;
 }
 
-.activity-main-cell textarea {
-  padding: 7px 8px;
-  font-size: 16px;
-  line-height: 1.12;
-  white-space: pre-wrap;
+.homework-text strong {
+  color: #3490cf;
+  font-weight: 900;
 }
 
 @media print {
@@ -605,7 +555,8 @@ body.cahier-tab-active .exercise-line-count-overlay {
     overflow: visible;
   }
 
-  .activity-page {
+  .activity-page,
+  .homework-page {
     page-break-before: always;
     padding: 0;
   }
