@@ -27,12 +27,20 @@ const getCurrentCssText = () => Array.from(document.styleSheets)
 
 const wrapCssForPdf = (css) => `${'<' + 'style'}>${css}${'<' + '/style'}>`;
 
+const GROUP_TITLES_FOR_PDF = ['tronc commun', '1ères bac', '1eres bac', '2ème bac', '2eme bac', 'autres'];
 const normalizeText = (text) => String(text || '').replace(/\s+/g, ' ').trim().toLowerCase();
 
 const isVisiblePage = (page) => {
   const rect = page.getBoundingClientRect();
   const style = window.getComputedStyle(page);
   return rect.width > 50 && rect.height > 50 && style.display !== 'none' && style.visibility !== 'hidden';
+};
+
+const canonicalGroupTitle = (title) => {
+  const text = normalizeText(title);
+  if (text === '1eres bac') return '1ères bac';
+  if (text === '2eme bac') return '2ème bac';
+  return text;
 };
 
 const getFilledGroupTitles = () => {
@@ -49,7 +57,7 @@ const getFilledGroupTitles = () => {
 
   return new Set(Array.from(groupGrid.children).reduce((titles, groupBox) => {
     const children = Array.from(groupBox.children || []);
-    const title = normalizeText(children[0]?.textContent || '');
+    const title = canonicalGroupTitle(children[0]?.textContent || '');
     const classesText = normalizeText(children[1]?.textContent || '');
     const hasRealClass = classesText && classesText !== 'déposer ici';
     if (title && hasRealClass) titles.push(title);
@@ -57,7 +65,16 @@ const getFilledGroupTitles = () => {
   }, []));
 };
 
-const getHomeworkPageTitle = (page) => normalizeText(page.querySelector('.homework-page div')?.textContent || '');
+const getHomeworkPageTitle = (page) => {
+  const directTitle = canonicalGroupTitle(page.querySelector(':scope > div > div')?.textContent || '');
+  if (GROUP_TITLES_FOR_PDF.includes(directTitle)) return directTitle;
+
+  const candidates = Array.from(page.querySelectorAll('div'))
+    .slice(0, 24)
+    .map((node) => canonicalGroupTitle(node.textContent || ''));
+
+  return candidates.find((text) => GROUP_TITLES_FOR_PDF.includes(text)) || '';
+};
 
 const shouldExportPage = (page, filledGroupTitles) => {
   if (!page.classList.contains('homework-page')) return true;
@@ -94,9 +111,7 @@ const cloneA4PagesHtml = () => {
       exportZone.append(clone);
     });
   } else {
-    const clone = zone.cloneNode(true);
-    prepareCloneInputs(clone);
-    exportZone.innerHTML = clone.innerHTML;
+    throw new Error('Aucune page du groupe rempli trouvée');
   }
 
   return `${wrapCssForPdf(getCurrentCssText())}${exportZone.outerHTML}`;
