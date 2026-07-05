@@ -499,6 +499,25 @@ body.cahier-tab-active .exercise-line-count-overlay {
   background: #eef2f8;
 }
 
+.activity-label-row th:nth-child(1),
+.activity-label-row th:nth-child(2),
+.activity-label-row th:nth-child(3),
+.activity-table tbody td:nth-child(1),
+.activity-table tbody td:nth-child(2),
+.activity-table tbody td:nth-child(3) {
+  width: 7%;
+}
+
+.activity-label-row th:nth-child(4),
+.activity-table .activity-main-cell {
+  width: 58%;
+}
+
+.activity-label-row th:nth-child(5),
+.activity-table tbody td:nth-child(5) {
+  width: 21%;
+}
+
 .activity-table tbody tr {
   height: 172px;
 }
