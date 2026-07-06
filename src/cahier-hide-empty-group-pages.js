@@ -40,11 +40,10 @@ const fixCahierProgressBars = () => {
   });
 };
 
-const findPreviousNormalGroupPage = (page) => {
-  const title = getCahierPageTitle(page);
+const findPreviousNormalPage = (page) => {
   let node = page.previousElementSibling;
   while (node) {
-    if (node.classList?.contains('homework-page') && node.dataset.cahierJulyComplete !== 'true' && getCahierPageTitle(node) === title) return node;
+    if (node.classList?.contains('homework-page') && node.dataset.cahierJulyComplete !== 'true' && !node.classList.contains('cahier-page-hidden-after-limit')) return node;
     node = node.previousElementSibling;
   }
   return null;
@@ -52,7 +51,7 @@ const findPreviousNormalGroupPage = (page) => {
 
 const normalizeJulyHeaders = () => {
   document.querySelectorAll('.homework-page[data-cahier-july-complete="true"]').forEach((page) => {
-    const source = findPreviousNormalGroupPage(page);
+    const source = findPreviousNormalPage(page);
     const sourceHeader = source?.firstElementChild;
     if (!sourceHeader) return;
 
@@ -151,6 +150,7 @@ window.setTimeout(scheduleEmptyGroupPageVisibility, 2200);
 window.setTimeout(scheduleEmptyGroupPageVisibility, 3600);
 window.setTimeout(scheduleEmptyGroupPageVisibility, 5600);
 window.setTimeout(scheduleEmptyGroupPageVisibility, 7600);
+window.setTimeout(scheduleEmptyGroupPageVisibility, 10000);
 
 document.addEventListener('input', (event) => {
   if (event.target?.closest?.('.timetable-table')) window.setTimeout(scheduleEmptyGroupPageVisibility, 120);
