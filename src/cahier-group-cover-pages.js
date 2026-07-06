@@ -227,7 +227,5 @@ document.addEventListener('mouseup', () => window.setTimeout(scheduleGroupCoverP
 
 new MutationObserver(scheduleGroupCoverPages).observe(document.body, {
   childList: true,
-  subtree: true,
-  attributes: true,
-  attributeFilter: ['class', 'style']
+  subtree: true
 });
