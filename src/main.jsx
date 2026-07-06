@@ -104,10 +104,12 @@ import './cahier-group-cover-pages.css';
 import './cahier-cover-page.js';
 import './cahier-group-cover-pages.js';
 
+// Tableau des examens sous l'emploi du temps.
+import './cahier-exams-footer.js';
+
 // Gardés désactivés : scripts DOM qui modifient les événements/juillet après React.
 // import './cahier-dedupe-holiday-classes.js';
 // import './cahier-cover-info-panel.js';
-// import './cahier-exams-footer.js';
 // import './cahier-exam-events.js';
 // import './cahier-hide-empty-group-pages.js';
 // import './cahier-july-complete.js';
