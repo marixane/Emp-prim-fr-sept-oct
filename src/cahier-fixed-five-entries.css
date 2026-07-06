@@ -10,6 +10,10 @@ body.cahier-tab-active:has(.timetable-table tbody textarea[placeholder="Classe"]
   display: block !important;
 }
 
+body.cahier-tab-active:has(.timetable-table tbody textarea[placeholder="Classe"]:not(:placeholder-shown)) .homework-page:not(:has(.homework-entry:not(.cahier-exam-entry):not(.cahier-extra-holiday-entry))) {
+  display: none !important;
+}
+
 body.cahier-tab-active .homework-page .homework-entry {
   box-sizing: border-box !important;
   height: var(--cahier-entry-height) !important;
