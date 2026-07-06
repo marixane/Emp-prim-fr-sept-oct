@@ -6,6 +6,11 @@ const getHomeworkPageTitleForCover = (page) => String(
   ''
 ).trim();
 
+const setHomeworkPageTitleForCover = (page, title) => {
+  const titleNode = page.querySelector('.homework-page > div:first-child > div:first-child') || page.firstElementChild?.firstElementChild;
+  if (titleNode && title) titleNode.textContent = title;
+};
+
 const getHomeworkPageDateForCover = (page) => {
   const dateText = String(page.querySelector('.homework-date')?.textContent || '');
   const match = dateText.match(/\b(\d{2})\/(\d{2})\b/);
@@ -47,12 +52,28 @@ const getFilledGroupClassesForCover = () => {
     return style.includes('grid-template-columns: repeat(5');
   });
 
-  return Array.from(groupsWrap?.children || []).map((group) => ({
+  return Array.from(groupsWrap?.children || []).map((group, index) => ({
     title: String(group.children?.[0]?.textContent || '').trim(),
+    color: GROUP_COVER_COLORS[index % GROUP_COVER_COLORS.length],
     classes: Array.from(group.children?.[1]?.querySelectorAll('span') || [])
       .map((span) => String(span.textContent || '').trim())
       .filter(Boolean)
   })).filter((group) => group.title && group.classes.length);
+};
+
+const normalizeClassForCover = (text) => String(text || '').trim().toLowerCase().replace(/\s+/g, '');
+
+const getBlockTextForCover = (block) => normalizeClassForCover(block.pages.map((page) => page.textContent || '').join(' '));
+
+const getGroupForBlock = (block, filledGroups, usedTitles) => {
+  const blockText = getBlockTextForCover(block);
+  const exact = filledGroups.find((group) => !usedTitles.has(group.title) && group.classes.some((className) => blockText.includes(normalizeClassForCover(className))));
+  if (exact) return exact;
+
+  const byTitle = filledGroups.find((group) => !usedTitles.has(group.title) && normalizeClassForCover(block.title) === normalizeClassForCover(group.title));
+  if (byTitle) return byTitle;
+
+  return filledGroups.find((group) => !usedTitles.has(group.title)) || null;
 };
 
 const buildClassesPanel = (classes) => {
@@ -101,10 +122,11 @@ const buildGroupCoverPage = (title, index, classes, color) => {
   return page;
 };
 
-const applyThemeToBlockPages = (pages, color) => {
+const applyThemeToBlockPages = (pages, color, title) => {
   pages.forEach((page) => {
     page.classList.add('cahier-themed-group-page');
     page.style.setProperty('--group-cover-color', color);
+    setHomeworkPageTitleForCover(page, title);
   });
 };
 
@@ -156,19 +178,21 @@ const applyGroupCoverPages = () => {
 
   const blocks = splitVisibleHomeworkBlocks();
   const filledGroups = getFilledGroupClassesForCover();
+  const usedTitles = new Set();
 
   blocks.forEach((block, index) => {
     if (!block.pages.length) return;
-    const group = filledGroups[index];
+    const group = getGroupForBlock(block, filledGroups, usedTitles);
     if (!group?.classes?.length) {
       block.pages.forEach((page) => { page.style.display = 'none'; });
       return;
     }
-    const color = GROUP_COVER_COLORS[index % GROUP_COVER_COLORS.length];
-    applyThemeToBlockPages(block.pages, color);
+    usedTitles.add(group.title);
+    const color = group.color || GROUP_COVER_COLORS[index % GROUP_COVER_COLORS.length];
+    applyThemeToBlockPages(block.pages, color, group.title);
     const firstPageIsJuly = block.pages[0]?.dataset.cahierJulyComplete === 'true';
     if (!firstPageIsJuly) {
-      const cover = buildGroupCoverPage(block.title, index, group.classes, color);
+      const cover = buildGroupCoverPage(group.title, index, group.classes, color);
       block.pages[0].before(cover);
     }
   });
@@ -195,6 +219,7 @@ window.setTimeout(scheduleGroupCoverPages, 300);
 window.setTimeout(scheduleGroupCoverPages, 900);
 window.setTimeout(scheduleGroupCoverPages, 1800);
 window.setTimeout(scheduleGroupCoverPages, 2600);
+window.setTimeout(scheduleGroupCoverPages, 4200);
 
 document.addEventListener('input', (event) => {
   if (event.target?.closest?.('.timetable-table')) window.setTimeout(scheduleGroupCoverPages, 180);
