@@ -8,22 +8,27 @@ const resizeClassLabels = () => {
 
     const count = line.parentElement?.children?.length || 1;
     const startSize = count >= 4 ? 18 : count === 3 ? 22 : 26;
-    const minSize = 6;
+    const minSize = 4;
 
     label.style.setProperty('font-weight', '900', 'important');
     label.style.setProperty('transform', 'none', 'important');
+    label.style.setProperty('transform-origin', 'left center', 'important');
     label.style.setProperty('overflow', 'hidden', 'important');
     label.style.setProperty('text-overflow', 'clip', 'important');
     label.style.setProperty('white-space', 'nowrap', 'important');
 
     const styles = getComputedStyle(label);
-    const padding = parseFloat(styles.paddingLeft || 0) + parseFloat(styles.paddingRight || 0);
+    const paddingLeft = parseFloat(styles.paddingLeft || 0);
+    const paddingRight = parseFloat(styles.paddingRight || 0);
     const labelRect = label.getBoundingClientRect();
     const durationRect = duration.getBoundingClientRect();
-    const availableWidth = Math.max(durationRect.left - labelRect.left - padding - 3, 0);
+    const availableWidth = Math.max(durationRect.left - labelRect.left - paddingLeft - paddingRight - 4, 0);
+
+    label.style.setProperty('width', `${Math.max(availableWidth + paddingLeft + paddingRight, 0)}px`, 'important');
+    label.style.setProperty('max-width', `${Math.max(availableWidth + paddingLeft + paddingRight, 0)}px`, 'important');
+
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
-
     let size = startSize;
     label.style.setProperty('font-size', `${size}px`, 'important');
 
@@ -39,13 +44,6 @@ const resizeClassLabels = () => {
       }
 
       label.style.setProperty('font-size', `${size}px`, 'important');
-
-      const measuredWidth = context.measureText(text).width;
-      if (measuredWidth > availableWidth && measuredWidth > 0) {
-        const scale = availableWidth / measuredWidth;
-        label.style.setProperty('transform', `scaleX(${scale})`, 'important');
-        label.style.setProperty('transform-origin', 'left center', 'important');
-      }
     }
   });
 };
@@ -55,7 +53,8 @@ const scheduleClassLabelResize = () => {
   cancelAnimationFrame(classLabelFrame);
   classLabelFrame = requestAnimationFrame(() => {
     resizeClassLabels();
-    setTimeout(resizeClassLabels, 80);
+    setTimeout(resizeClassLabels, 100);
+    setTimeout(resizeClassLabels, 220);
   });
 };
 
