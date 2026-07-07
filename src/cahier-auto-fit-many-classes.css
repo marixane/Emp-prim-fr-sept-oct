@@ -59,25 +59,69 @@
   gap: 2px !important;
 }
 
+/* 1 à 2 classes : texte très grand */
 .homework-page .homework-subject > div {
-  max-height: 25px !important;
+  max-height: 38px !important;
   min-height: 0 !important;
+  padding: 4px 8px !important;
+  gap: 6px !important;
+  border-radius: 8px !important;
+}
+
+.homework-page .homework-subject > div > span:first-child {
+  min-width: 66px !important;
+  height: 26px !important;
+  font-size: 35px !important;
+}
+
+.homework-page .homework-subject > div > span:nth-child(2) {
+  font-size: 35px !important;
+}
+
+.homework-page .cahier-session-duration {
+  font-size: 25px !important;
+}
+
+/* 3 classes : taille intermédiaire */
+.homework-page .homework-subject:has(> div:nth-child(3)) > div {
+  max-height: 33px !important;
+  padding: 3px 7px !important;
+  gap: 5px !important;
+}
+
+.homework-page .homework-subject:has(> div:nth-child(3)) > div > span:first-child {
+  min-width: 60px !important;
+  height: 23px !important;
+  font-size: 15px !important;
+}
+
+.homework-page .homework-subject:has(> div:nth-child(3)) > div > span:nth-child(2) {
+  font-size: 18px !important;
+}
+
+.homework-page .homework-subject:has(> div:nth-child(3)) .cahier-session-duration {
+  font-size: 13px !important;
+}
+
+/* 4 classes ou plus : compact */
+.homework-page .homework-subject:has(> div:nth-child(4)) > div {
+  max-height: 25px !important;
   padding: 1px 5px !important;
   gap: 3px !important;
   border-radius: 7px !important;
 }
 
-.homework-page .homework-subject > div > span:first-child {
+.homework-page .homework-subject:has(> div:nth-child(4)) > div > span:first-child {
   min-width: 48px !important;
   height: 18px !important;
   font-size: 10px !important;
 }
 
-.homework-page .homework-subject > div > span:nth-child(2) {
+.homework-page .homework-subject:has(> div:nth-child(4)) > div > span:nth-child(2) {
   font-size: 11px !important;
 }
 
-.homework-page .cahier-session-duration {
+.homework-page .homework-subject:has(> div:nth-child(4)) .cahier-session-duration {
   font-size: 9px !important;
 }
 
