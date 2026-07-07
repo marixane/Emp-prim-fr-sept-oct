@@ -31,9 +31,28 @@ const getTimetableDurations = () => {
 
 const getEntryDay = (entry) => clean((entry.querySelector('.homework-date')?.textContent || '').split(' ')[0]);
 
+const fitNonHourLabel = (node) => {
+  node.style.removeProperty('font-size');
+  node.style.setProperty('font-size', '12px', 'important');
+
+  let size = 12;
+  const availableWidth = Math.max(node.clientWidth - 8, 0);
+  while (size > 8 && node.scrollWidth > availableWidth) {
+    size -= 1;
+    node.style.setProperty('font-size', `${size}px`, 'important');
+  }
+};
+
 const markNonHourLabels = () => {
   document.querySelectorAll('.homework-subject > div > span:first-child').forEach((node) => {
-    node.classList.toggle('cahier-session-non-hour', !isHourText(node.textContent));
+    const nonHour = !isHourText(node.textContent);
+    node.classList.toggle('cahier-session-non-hour', nonHour);
+
+    if (nonHour) {
+      fitNonHourLabel(node);
+    } else {
+      node.style.removeProperty('font-size');
+    }
   });
 };
 
