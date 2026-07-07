@@ -7,7 +7,7 @@ const resizeClassLabels = () => {
 
     const count = line.parentElement?.children?.length || 1;
     const startSize = count >= 4 ? 18 : count === 3 ? 22 : 26;
-    const minSize = 6;
+    const minSize = 4;
 
     label.style.removeProperty('width');
     label.style.removeProperty('max-width');
@@ -15,12 +15,14 @@ const resizeClassLabels = () => {
     label.style.setProperty('font-weight', '900', 'important');
     label.style.setProperty('transform', 'none', 'important');
     label.style.setProperty('overflow', 'hidden', 'important');
+    label.style.setProperty('contain', 'paint', 'important');
+    label.style.setProperty('clip-path', 'inset(0)', 'important');
     label.style.setProperty('text-overflow', 'clip', 'important');
     label.style.setProperty('white-space', 'nowrap', 'important');
 
     const styles = getComputedStyle(label);
     const padding = parseFloat(styles.paddingLeft || 0) + parseFloat(styles.paddingRight || 0);
-    const availableWidth = Math.max(label.clientWidth - padding - 2, 0);
+    const availableWidth = Math.max(label.clientWidth - padding - 6, 0);
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
 
