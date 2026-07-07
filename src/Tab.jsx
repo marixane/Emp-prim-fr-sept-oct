@@ -18,7 +18,11 @@ const MANDATORY_EVENTS = [
   { start: '01/01', end: '01/01', label: 'Nationale', text: 'Fête nationale : Nouvel An', type: 'holiday' },
   { start: '11/01', end: '11/01', label: 'Nationale', text: 'Fête nationale : Manifeste de l’Indépendance', type: 'holiday' },
   { start: '14/01', end: '14/01', label: 'Nationale', text: 'Fête nationale : Nouvel An Amazigh', type: 'holiday' },
-  { start: '20/01', end: '24/01', label: 'Primaire', text: 'Examen : Examen normalisé local', type: 'exam' },
+  { start: '04/01', end: '09/01', label: 'Primaire', text: 'Dernière période des contrôles continus', type: 'primary-event' },
+  { start: '16/01', end: '16/01', label: 'Primaire', text: 'Fin de saisie des notes', type: 'primary-event' },
+  { start: '18/01', end: '19/01', label: 'Primaire', text: 'Examen unifié local du certificat d’études primaires', type: 'primary-event' },
+  { start: '21/01', end: '22/01', label: 'Primaire', text: 'Conseils de classe', type: 'primary-event' },
+  { start: '23/01', end: '23/01', label: 'Primaire', text: 'Remise des bulletins', type: 'primary-event' },
   { start: '25/01', end: '01/02', label: 'Scolaire', text: 'Vacance scolaire : Vacances de mi-année', type: 'holiday' },
   { start: '15/03', end: '22/03', label: 'Scolaire', text: 'Vacance scolaire : Vacances intermédiaires 3', type: 'holiday' },
   { start: '20/03', end: '22/03', label: 'Religieuse', text: 'Vacance religieuse : Aïd Al-Fitr', type: 'holiday' },
@@ -29,7 +33,11 @@ const MANDATORY_EVENTS = [
   { start: '01/06', end: '04/06', label: 'Lycée', text: 'Examen : Examen national 2ème Bac', type: 'exam' },
   { start: '16/06', end: '16/06', label: 'Religieuse', text: 'Vacance religieuse : 1er Moharram', type: 'holiday' },
   { start: '16/06', end: '17/06', label: 'Collège', text: 'Examen : Examen régional', type: 'exam' },
-  { start: '23/06', end: '24/06', label: 'Primaire', text: 'Examen : Examen normalisé provincial', type: 'exam' },
+  { start: '14/06', end: '19/06', label: 'Primaire', text: 'Dernière période des contrôles continus', type: 'primary-event' },
+  { start: '22/06', end: '22/06', label: 'Primaire', text: 'Fin de saisie des notes', type: 'primary-event' },
+  { start: '25/06', end: '26/06', label: 'Primaire', text: 'Examen unifié provincial du certificat d’études primaires', type: 'primary-event' },
+  { start: '01/07', end: '02/07', label: 'Primaire', text: 'Conseils de classe', type: 'primary-event' },
+  { start: '03/07', end: '03/07', label: 'Primaire', text: 'Remise des bulletins', type: 'primary-event' },
   { start: '03/07', end: '04/07', label: 'Lycée', text: 'Rattrapage : 1ère Bac', type: 'exam' },
   { start: '06/07', end: '09/07', label: 'Lycée', text: 'Rattrapage : 2ème Bac', type: 'exam' },
   { start: '10/07', end: '10/07', label: 'Lycée', text: 'Signature du Procès-verbal de sortie', type: 'exam' }
@@ -54,6 +62,7 @@ const cloneCell = (cell) => ({ ...normalizeCell(cell), hidden: false });
 
 const dotTextStyle = { color: 'rgba(63, 64, 80, 0.28)', fontSize: '22px', fontWeight: 900, lineHeight: 1.35, letterSpacing: '1px', whiteSpace: 'pre-wrap', overflow: 'hidden' };
 const holidayTextStyle = { color: '#9a3412', fontSize: '21px', fontWeight: 900, lineHeight: 1.25, letterSpacing: '0.2px', textAlign: 'center', justifyContent: 'center', background: 'linear-gradient(90deg, rgba(254,215,170,0.38), rgba(254,243,199,0.62))', borderRadius: '12px', margin: '8px 18px', padding: '10px 16px', overflow: 'hidden' };
+const primaryEventTextStyle = { color: '#4a3a00', fontSize: '20px', fontWeight: 900, lineHeight: 1.25, letterSpacing: '0.2px', textAlign: 'center', justifyContent: 'center', background: '#fff3a3', border: '2px solid #d4a800', borderRadius: '12px', margin: '8px 18px', padding: '10px 16px', overflow: 'hidden' };
 const examTextStyle = { color: '#1e3a8a', fontSize: '20px', fontWeight: 900, lineHeight: 1.25, letterSpacing: '0.2px', textAlign: 'center', justifyContent: 'center', background: 'linear-gradient(90deg, rgba(191,219,254,0.45), rgba(219,234,254,0.82))', border: '1px solid rgba(37,99,235,0.28)', borderRadius: '12px', margin: '8px 18px', padding: '10px 16px', overflow: 'hidden' };
 const subjectTextStyle = { display: 'flex', flexDirection: 'column', alignItems: 'stretch', justifyContent: 'center', gap: '6px', padding: '8px 10px', textAlign: 'center', overflow: 'hidden' };
 const sessionLineStyle = { display: 'grid', gridTemplateColumns: '52px 1fr', alignItems: 'center', gap: '6px', minHeight: '24px', padding: '4px 7px', border: '1px solid rgba(63, 64, 80, 0.18)', borderRadius: '8px', background: 'rgba(63, 64, 80, 0.045)', color: '#343545', fontFamily: 'Arial, sans-serif', lineHeight: 1, overflow: 'hidden' };
@@ -246,7 +255,7 @@ export default function Tab() {
       const eventEntries = getMandatoryEventStart(monthDate).map((event, eventIndex) => {
         const endDate = getMonthDateAsSchoolDate(event.end);
         const displayDate = event.start === event.end ? `${getDisplayDay(date, rows)} ${event.start}` : `${getDisplayDay(date, rows)} ${event.start} - ${getDisplayDay(endDate, rows)} ${event.end}`;
-        return { date: displayDate, sessions: [{ hour: event.label, className: '' }], text: event.text, isHoliday: event.type === 'holiday', isExam: event.type === 'exam', progressDate: event.start, color: event.type === 'exam' ? '#38bdf8' : '#f97316', eventKey: `${event.start}-${eventIndex}` };
+        return { date: displayDate, sessions: [{ hour: event.label, className: '' }], text: event.text, isHoliday: event.type === 'holiday', isExam: event.type === 'exam', isPrimaryEvent: event.type === 'primary-event', progressDate: event.start, color: event.type === 'primary-event' ? '#facc15' : event.type === 'exam' ? '#38bdf8' : '#f97316', eventKey: `${event.start}-${eventIndex}` };
       });
 
       if (isInsideMandatoryEventAfterStart(monthDate) && !eventEntries.length) return [];
@@ -425,7 +434,7 @@ export default function Tab() {
           </div>
           {pageEntries.map((entry) => <section className={`homework-entry ${entry.isExam ? 'cahier-exam-entry' : ''} ${entry.isHoliday ? 'cahier-extra-holiday-entry' : ''}`} key={`${group.title}-${entry.date}-${entry.eventKey || entry.text}`} style={{ '--homework-color': entry.color }}>
             <div className="homework-date" contentEditable suppressContentEditableWarning onKeyDown={validateOnEnter}>{entry.date}</div>
-            <div className="homework-content"><div className="homework-subject" contentEditable={entry.sessions.length === 0} suppressContentEditableWarning onKeyDown={validateOnEnter} style={entry.sessions.length ? subjectTextStyle : undefined}>{entry.sessions.map((session) => <div key={`${group.title}-${entry.date}-${session.hour}-${session.className}`} style={sessionLineStyle}><span style={sessionHourStyle}>{session.hour}</span><span style={sessionClassStyle}>{session.className}</span></div>)}</div><div className="homework-text" contentEditable suppressContentEditableWarning onKeyDown={validateOnEnter} style={entry.isHoliday ? holidayTextStyle : entry.isExam ? examTextStyle : dotTextStyle}>{entry.text}</div></div>
+            <div className="homework-content"><div className="homework-subject" contentEditable={entry.sessions.length === 0} suppressContentEditableWarning onKeyDown={validateOnEnter} style={entry.sessions.length ? subjectTextStyle : undefined}>{entry.sessions.map((session) => <div key={`${group.title}-${entry.date}-${session.hour}-${session.className}`} style={sessionLineStyle}><span style={sessionHourStyle}>{session.hour}</span><span style={sessionClassStyle}>{session.className}</span></div>)}</div><div className="homework-text" contentEditable suppressContentEditableWarning onKeyDown={validateOnEnter} style={entry.isPrimaryEvent ? primaryEventTextStyle : entry.isHoliday ? holidayTextStyle : entry.isExam ? examTextStyle : dotTextStyle}>{entry.text}</div></div>
           </section>)}
         </div>)
       ])}
