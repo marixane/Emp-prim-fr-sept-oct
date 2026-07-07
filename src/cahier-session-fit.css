@@ -34,8 +34,8 @@
 .homework-subject > div > span:nth-child(2) {
   box-sizing: border-box !important;
   position: relative !important;
-  left: -13px !important;
-  width: calc(100% + 13px) !important;
+  left: -10px !important;
+  width: calc(100% + 10px) !important;
   padding-left: 3px !important;
   padding-right: 5px !important;
   font-size: 17px !important;
