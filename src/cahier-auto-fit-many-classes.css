@@ -44,7 +44,7 @@
 }
 
 .homework-page .homework-date {
-  font-size: clamp(20px, 2.2vw, 29px) !important;
+  font-size: clamp(15px, 1.8vw, 24px) !important;
   padding-top: 7px !important;
   padding-bottom: 6px !important;
   line-height: 1.05 !important;
