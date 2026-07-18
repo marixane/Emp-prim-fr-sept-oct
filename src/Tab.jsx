@@ -382,7 +382,7 @@ const getMonthDateAsSchoolDate = (monthDate) => {
 const createHomeworkProgress = (pages) => {
   const findPage = (predicate) => pages.findIndex((entries) => entries.some(predicate));
   const foundStart = findPage((entry) => entry.progressDate === '01/09');
-  const foundEnd = findPage((entry) => entry.progressDate === '10/07');
+  const foundEnd = findPage((entry) => entry.progressDate === '31/10');
   const startIndex = foundStart >= 0 ? foundStart : 0;
   const endIndex = foundEnd >= startIndex ? foundEnd : Math.max(pages.length - 1, startIndex);
   const pageDistance = Math.max(endIndex - startIndex, 1);
@@ -556,7 +556,7 @@ const getSchoolHomeworkDates = () => {
   const startYear = getSchoolStartYear();
   const dates = [];
   const current = new Date(startYear, 8, 1);
-  const end = new Date(startYear + 1, 6, 31);
+  const end = new Date(startYear, 9, 31);
   while (current <= end) {
     dates.push(new Date(current));
     current.setDate(current.getDate() + 1);

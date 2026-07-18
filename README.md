@@ -41,3 +41,7 @@ src/
 - Déplacement et zoom dans chaque cadre
 - Modèles supplémentaires
 - Export en meilleure qualité
+
+## Période spéciale
+
+Cette copie génère uniquement les pages du **01/09/2026 au 31/10/2026**.

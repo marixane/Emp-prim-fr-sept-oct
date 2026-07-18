@@ -45,7 +45,7 @@ const getMondayBasedDayIndex = (date) => (date.getDay() + 6) % 7;
 const formatMonthDate = (date) => `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}`;
 const getDisplayDay = (date, rows) => getMondayBasedDayIndex(date) < rows.length ? String(rows[getMondayBasedDayIndex(date)]?.day || DAYS[getMondayBasedDayIndex(date)]).toUpperCase() : CALENDAR_DAYS[date.getDay()].toUpperCase();
 const getMonthDateAsSchoolDate = (monthDate) => { const [d, m] = monthDate.split('/').map(Number); const y = getSchoolStartYear(); return new Date(m >= 9 ? y : y + 1, m - 1, d); };
-const getSchoolDates = () => { const y = getSchoolStartYear(); const dates = []; const current = new Date(y, 8, 1); const end = new Date(y + 1, 6, 10); while (current <= end) { dates.push(new Date(current)); current.setDate(current.getDate() + 1); } return dates; };
+const getSchoolDates = () => { const y = getSchoolStartYear(); const dates = []; const current = new Date(y, 8, 1); const end = new Date(y, 9, 31); while (current <= end) { dates.push(new Date(current)); current.setDate(current.getDate() + 1); } return dates; };
 const getEventStart = (monthDate) => MANDATORY_EVENTS.filter((event) => event.start === monthDate);
 const isInsideEventAfterStart = (monthDate) => MANDATORY_EVENTS.some((event) => { const d = getMonthDateAsSchoolDate(monthDate); return d > getMonthDateAsSchoolDate(event.start) && d <= getMonthDateAsSchoolDate(event.end); });
 const chunkEntries = (entries, size) => entries.reduce((pages, entry, index) => { if (index % size === 0) pages.push([]); pages[pages.length - 1].push(entry); return pages; }, []);

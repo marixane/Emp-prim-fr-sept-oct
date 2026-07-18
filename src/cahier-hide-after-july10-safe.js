@@ -1,5 +1,5 @@
 const SCHOOL_START = new Date(2026, 8, 1, 12, 0, 0, 0);
-const SCHOOL_END = new Date(2027, 6, 10, 12, 0, 0, 0);
+const SCHOOL_END = new Date(2026, 9, 31, 12, 0, 0, 0);
 
 const FLAG_DATES = [
   { title: 'Vacances intermédiaires 1', date: new Date(2026, 9, 18, 12, 0, 0, 0) },

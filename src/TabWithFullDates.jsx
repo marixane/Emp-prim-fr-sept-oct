@@ -3,7 +3,7 @@ import Tab from './Tab.jsx';
 
 const SCHOOL_START_YEAR = 2026;
 const SCHOOL_END_YEAR = 2027;
-const SCHOOL_END_DATE = new Date(2027, 6, 10);
+const SCHOOL_END_DATE = new Date(2026, 9, 31);
 const DATE_PATTERN = /\b(\d{2})\/(\d{2})(?![\s/]?\d{4})\b/g;
 const FULL_DATE_PATTERN = /\b(\d{2})\/(\d{2})\/(\d{4})\b/;
 const YEAR_FIRST_DATE_PATTERN = /\b(\d{4})\/(\d{2})\/(\d{2})\b/;
