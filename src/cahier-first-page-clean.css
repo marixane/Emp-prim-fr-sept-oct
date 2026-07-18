@@ -40,11 +40,12 @@
 .cahier-page > .cahier-header > h2::after {
   content: 'Emploi du temps hebdomadaire' !important;
   color: #1f2937 !important;
-  font-size: 34px !important;
+  font-size: 25px !important;
   font-weight: 950 !important;
-  letter-spacing: 2.2px !important;
-  text-transform: uppercase !important;
+  letter-spacing: 0.8px !important;
+  text-transform: none !important;
   vertical-align: middle !important;
+  white-space: nowrap !important;
 }
 
 /* Deuxième page : placer la marge blanche à gauche et descendre le tableau
@@ -53,6 +54,15 @@ body.emp-primaire-ar .cahier-preview-zone
   .a4-page.primary-timetable-page .primary-timetable-layout {
   top: -5px !important;
   transform: translateX(40px) !important;
+}
+
+/* Trait continu entre LUNDI et MARDI, y compris lorsque les séances utilisent
+   des cellules fusionnées verticalement. */
+body.emp-primaire-ar .a4-page.primary-timetable-page
+  .primary-timetable-table thead tr > th:nth-child(2),
+body.emp-primaire-ar .a4-page.primary-timetable-page
+  .primary-timetable-table td[data-day-index="0"] {
+  border-right: 2px solid rgba(51, 65, 85, 0.82) !important;
 }
 
 .cahier-page > .total-hours-control {
