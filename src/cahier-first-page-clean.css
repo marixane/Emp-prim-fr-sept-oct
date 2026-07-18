@@ -38,13 +38,21 @@
 }
 
 .cahier-page > .cahier-header > h2::after {
-  content: 'استعمال الزمن الأسبوعي' !important;
+  content: 'Emploi du temps hebdomadaire' !important;
   color: #1f2937 !important;
   font-size: 34px !important;
   font-weight: 950 !important;
   letter-spacing: 2.2px !important;
   text-transform: uppercase !important;
   vertical-align: middle !important;
+}
+
+/* Deuxième page : placer la marge blanche à gauche et descendre le tableau
+   de 20 px par rapport à sa position actuelle sous le titre. */
+body.emp-primaire-ar .cahier-preview-zone
+  .a4-page.primary-timetable-page .primary-timetable-layout {
+  top: -5px !important;
+  transform: translateX(40px) !important;
 }
 
 .cahier-page > .total-hours-control {
