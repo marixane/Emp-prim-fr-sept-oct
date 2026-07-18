@@ -1,0 +1,3 @@
+Trigger Vercel deployment for full A4 PDF server fix.
+Latest required commit before this trigger: 79160a7b91d626cb4dd478e527db354ca9abd45a
+Retrigger: 2026-07-06 second attempt.

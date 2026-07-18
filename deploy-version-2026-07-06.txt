@@ -1,0 +1,4 @@
+Deploy trigger for latest cahier PDF version.
+Branch: safari-stable-v2
+Date: 2026-07-06
+Includes server PDF endpoint and fixed download button.
