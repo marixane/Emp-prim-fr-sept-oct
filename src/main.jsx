@@ -125,6 +125,7 @@ import './cahier-fixed-three-entries.css';
 // Version arabe : chargée en dernier pour préserver exactement la page 2.
 import './emp-primaire-ar.css';
 import './emp-primaire-ar.js';
+import './cahier-web-timetable-only.css';
 
 // Désactivé : ce helper DOM faisait buguer l'ajout de plusieurs séances.
 // import './cahier-group-cover-july10-light.js';

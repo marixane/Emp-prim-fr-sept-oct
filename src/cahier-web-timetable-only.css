@@ -1,0 +1,9 @@
+/* L’interface web commence par l’emploi du temps.
+   La couverture reste dans le DOM afin d’être conservée dans le PDF. */
+body.cahier-tab-active .cahier-preview-zone > .cover-page-only {
+  position: fixed !important;
+  top: 0 !important;
+  left: -100000px !important;
+  margin: 0 !important;
+  pointer-events: none !important;
+}
