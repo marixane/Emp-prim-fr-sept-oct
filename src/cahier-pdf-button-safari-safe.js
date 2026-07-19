@@ -516,7 +516,7 @@ const exportPdf = async (button, mode = 'download') => {
 
 const styleButton = (button, side) => {
   button.hidden = false;
-  const isPhone = window.matchMedia('(max-width: 768px)').matches;
+  const isPhone = window.matchMedia('(max-width: 1200px), (pointer: coarse)').matches;
   if (isPhone) {
     const horizontalPosition = side === 'left'
       ? 'left:10px!important;right:auto!important;'
