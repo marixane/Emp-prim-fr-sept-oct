@@ -513,19 +513,31 @@ const generateLatestPages = async () => {
   await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 };
 
+const requestPdfBlob = async (html) => {
+  const response = await fetch('/api/cahier-pdf', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ html, baseUrl: window.location.origin })
+  });
+  if (!response.ok) {
+    let message = 'Erreur génération PDF';
+    try { message = (await response.json()).error || message; } catch { /* ignore */ }
+    throw new Error(message);
+  }
+  return response.blob();
+};
+
 const exportPdf = async (button, mode = 'download') => {
   const original = button.textContent;
-  let previewWindow = null;
-
-  if (mode === 'preview') {
-    const targetName = `cahier-pdf-preview-${Date.now()}`;
-    previewWindow = window.open('about:blank', targetName);
-    if (!previewWindow) {
-      alert('Autorisez les fenêtres surgissantes pour voir le PDF.');
-      return;
-    }
-    showPreviewLoading(previewWindow);
+  if (mode === 'preview' && button.dataset.readyPdfUrl) {
+    const url = button.dataset.readyPdfUrl;
+    window.open(url, '_blank', 'noopener');
+    delete button.dataset.readyPdfUrl;
+    button.textContent = button.dataset.previewIdleLabel || 'Aperçu PDF';
+    window.setTimeout(() => URL.revokeObjectURL(url), 60000);
+    return;
   }
+  if (mode === 'preview') button.dataset.previewIdleLabel = original;
 
   button.disabled = true;
   button.textContent = 'Préparation PDF...';
@@ -537,34 +549,19 @@ const exportPdf = async (button, mode = 'download') => {
     button.textContent = 'Génération PDF...';
 
     if (mode === 'preview') {
-      submitPreviewForm(html, previewWindow);
-      button.textContent = 'PDF en cours...';
-      window.setTimeout(() => {
-        button.textContent = original;
-        button.disabled = false;
-      }, 1500);
+      const blob = await requestPdfBlob(html);
+      button.dataset.readyPdfUrl = URL.createObjectURL(blob);
+      button.textContent = 'Ouvrir PDF';
+      button.disabled = false;
       return;
     }
 
-    const response = await fetch('/api/cahier-pdf', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ html, baseUrl: window.location.origin })
-    });
-
-    if (!response.ok) {
-      let message = 'Erreur génération PDF';
-      try { message = (await response.json()).error || message; } catch { /* ignore */ }
-      throw new Error(message);
-    }
-
-    const blob = await response.blob();
+    const blob = await requestPdfBlob(html);
     button.textContent = 'Téléchargement...';
     downloadPdf(blob);
     button.textContent = 'PDF téléchargé';
     window.setTimeout(() => { button.textContent = original; }, 900);
   } catch (error) {
-    if (previewWindow && !previewWindow.closed) previewWindow.close();
     alert(`Erreur PDF : ${error?.message || 'export impossible'}`);
     button.textContent = original;
   } finally {
