@@ -464,6 +464,26 @@ const submitPreviewForm = (html, previewWindow) => {
   form.remove();
 };
 
+const generateLatestPages = async () => {
+  const activeElement = document.activeElement;
+  if (activeElement instanceof HTMLInputElement || activeElement instanceof HTMLTextAreaElement || activeElement instanceof HTMLSelectElement) activeElement.blur();
+
+  await new Promise((resolve) => {
+    let finished = false;
+    const complete = () => {
+      if (finished) return;
+      finished = true;
+      window.removeEventListener('cahier-pages-generated', complete);
+      resolve();
+    };
+    window.addEventListener('cahier-pages-generated', complete, { once: true });
+    window.dispatchEvent(new Event('cahier-request-generate-pages'));
+    window.setTimeout(complete, 4000);
+  });
+
+  await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+};
+
 const exportPdf = async (button, mode = 'download') => {
   const original = button.textContent;
   let previewWindow = null;
@@ -482,6 +502,7 @@ const exportPdf = async (button, mode = 'download') => {
   button.textContent = 'Préparation PDF...';
 
   try {
+    await generateLatestPages();
     if (document.fonts?.ready) await document.fonts.ready;
     const html = buildExportHtml();
     button.textContent = 'Génération PDF...';
