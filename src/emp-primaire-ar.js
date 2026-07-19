@@ -96,6 +96,10 @@ const ARABIC_REPLACEMENTS = [
   ['Dimanche', 'الأحد'],
 ];
 
+// La structure de ce projet reste celle du modèle primaire, mais tous les
+// textes sont maintenant fournis directement en français par React.
+ARABIC_REPLACEMENTS.length = 0;
+
 const replacementRegexes = ARABIC_REPLACEMENTS
   .sort((a, b) => b[0].length - a[0].length)
   .map(([source, target]) => [new RegExp(source.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), target]);
@@ -154,22 +158,24 @@ function applyArabicVersion() {
       page.classList.toggle('emp-ar-excluded-page', isExcluded);
       page.classList.toggle('emp-ar-translated-page', !isExcluded);
       if (!isExcluded) {
-        page.setAttribute('dir', 'rtl');
-        page.setAttribute('lang', 'ar');
+        page.setAttribute('dir', 'ltr');
+        page.setAttribute('lang', 'fr');
       } else {
         page.removeAttribute('dir');
         page.removeAttribute('lang');
       }
     });
 
-    translateTree(document.body, excludedPage);
+    // Le projet français n'a aucun texte à traduire. Les classes de mise en
+    // page doivent toutefois être posées sur chaque page générée.
+    if (replacementRegexes.length) translateTree(document.body, excludedPage);
   } finally {
     applyingArabic = false;
   }
 }
 
 function startArabicVersion() {
-  document.documentElement.lang = 'ar';
+  document.documentElement.lang = 'fr';
   document.body.classList.add('emp-primaire-ar');
   applyArabicVersion();
   requestAnimationFrame(() => requestAnimationFrame(applyArabicVersion));

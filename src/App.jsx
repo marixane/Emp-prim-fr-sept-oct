@@ -16,7 +16,7 @@ const refreshLayout = () => {
 };
 
 export default function App() {
-  const [primaryLevelRows, setPrimaryLevelRows] = useState(() => ['المستوى الأول', 'المستوى الثاني']);
+  const [primaryLevelRows, setPrimaryLevelRows] = useState(() => ['Niveau 1', 'Niveau 2']);
 
   useEffect(() => {
     document.body.classList.add('cahier-tab-active');

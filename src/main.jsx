@@ -122,8 +122,9 @@ import './cahier-first-saturday-visibility.js';
 import './cahier-pdf-compact-timetable.css';
 import './cahier-pdf-compact-timetable.js';
 import './cahier-fixed-three-entries.css';
-// Version arabe : chargée en dernier pour préserver exactement la page 2.
+// La structure primaire commune est suivie du miroir français, chargé en dernier.
 import './emp-primaire-ar.css';
+import './emp-primaire-fr.css';
 import './emp-primaire-ar.js';
 import './cahier-web-timetable-only.css';
 
