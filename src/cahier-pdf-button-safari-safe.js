@@ -570,6 +570,11 @@ const exportPdf = async (button, mode = 'download') => {
 };
 
 const styleButton = (button, side) => {
+  // La barre du tableau révèle directement le bouton dans son style final.
+  // Le garder caché ici évite le flash de l'ancien bouton vert fixe.
+  button.hidden = true;
+  button.removeAttribute('style');
+  return;
   button.hidden = false;
   const isPhone = window.matchMedia('(max-width: 768px)').matches;
   if (isPhone) {

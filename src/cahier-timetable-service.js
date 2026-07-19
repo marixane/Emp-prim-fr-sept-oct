@@ -7,6 +7,7 @@ const resetButton = (button, role) => {
   /* Les anciens boutons reçoivent un style 3D vert directement dans l’attribut
      style. Le retirer permet à la nouvelle barre d’appliquer un thème homogène. */
   button.removeAttribute('style');
+  button.hidden = false;
   button.classList.add('cahier-timetable-toolbar-button', `cahier-timetable-${role}-button`);
 };
 
