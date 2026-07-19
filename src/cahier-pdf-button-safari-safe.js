@@ -192,11 +192,22 @@ const copyComputedSessionStyles = (clone, source) => {
 const prepareClone = (clone, source) => {
   copyComputedSessionStyles(clone, source);
   clone.querySelectorAll(`#${PDF_BUTTON_ID}, #${PDF_PREVIEW_BUTTON_ID}, script, style, link`).forEach((node) => node.remove());
-  clone.querySelectorAll('textarea').forEach((textarea) => {
-    textarea.textContent = textarea.value;
-    textarea.setAttribute('value', textarea.value);
+  const sourceTextareas = Array.from(source?.querySelectorAll('textarea') || []);
+  clone.querySelectorAll('textarea').forEach((textarea, index) => {
+    const currentValue = sourceTextareas[index]?.value ?? textarea.value ?? textarea.textContent ?? '';
+    textarea.value = currentValue;
+    textarea.textContent = currentValue;
+    textarea.setAttribute('value', currentValue);
   });
-  clone.querySelectorAll('input').forEach((input) => input.setAttribute('value', input.value));
+  const sourceInputs = Array.from(source?.querySelectorAll('input') || []);
+  clone.querySelectorAll('input').forEach((input, index) => {
+    const sourceInput = sourceInputs[index];
+    const currentValue = sourceInput?.value ?? input.value ?? '';
+    input.value = currentValue;
+    input.setAttribute('value', currentValue);
+    if (sourceInput?.checked) input.setAttribute('checked', 'checked');
+    else input.removeAttribute('checked');
+  });
   const sourceSelects = Array.from(source?.querySelectorAll('select') || []);
   clone.querySelectorAll('select').forEach((select, index) => {
     const sourceSelect = sourceSelects[index];
