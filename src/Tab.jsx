@@ -1247,16 +1247,24 @@ export default function Tab({ primaryLevelRows: controlledPrimaryLevelRows, onPr
       </div>
       <MoroccoHolidaysPage />
     </section>
-    <label className="cahier-class-grouping-control no-print">
-      <span>Organisation des classes</span>
-      <select value={classGroupingMode} onChange={(event) => {
-        setClassGroupingMode(event.target.value);
-        invalidateGeneratedPages();
-      }}>
-        <option value="grouped">2 classes groupées</option>
-        <option value="separated">Classes séparées</option>
-        <option value="separated-two-days">Classes séparées 2 jrs</option>
-      </select>
-    </label>
+    <div className="cahier-class-grouping-control no-print">
+      <button
+        type="button"
+        className="cahier-layout-cycle-button"
+        onClick={() => {
+          setClassGroupingMode(classGroupingMode === 'grouped'
+            ? 'separated'
+            : classGroupingMode === 'separated'
+              ? 'separated-two-days'
+              : 'grouped');
+          invalidateGeneratedPages();
+        }}
+        aria-label={`Organisation actuelle : ${classGroupingMode === 'grouped' ? '2 classes groupées' : classGroupingMode === 'separated' ? 'Classes séparées' : 'Classes séparées 2 jours'}. Cliquer pour changer.`}
+        title="Cliquer pour passer à l’organisation suivante"
+      >
+        <span className="cahier-layout-cycle-title">Organisation des classes</span>
+        <span className="cahier-layout-cycle-value">▼ {classGroupingMode === 'grouped' ? '2 classes groupées' : classGroupingMode === 'separated' ? 'Classes séparées' : 'Classes séparées 2 jours'}</span>
+      </button>
+    </div>
   </main>;
 }
