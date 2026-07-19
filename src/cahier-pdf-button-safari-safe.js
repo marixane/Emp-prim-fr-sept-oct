@@ -516,6 +516,14 @@ const exportPdf = async (button, mode = 'download') => {
 
 const styleButton = (button, side) => {
   button.hidden = false;
+  const isPhone = window.matchMedia('(max-width: 768px)').matches;
+  if (isPhone) {
+    const horizontalPosition = side === 'left'
+      ? 'left:10px!important;right:auto!important;'
+      : 'left:auto!important;right:10px!important;';
+    button.style.cssText = `position:fixed!important;${horizontalPosition}bottom:10px!important;z-index:2147483647!important;display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;box-sizing:border-box!important;border:1px solid #15803d!important;border-bottom:2px solid #14532d!important;border-radius:9px!important;padding:4px 7px!important;width:118px!important;height:35px!important;max-width:calc(50vw - 15px)!important;min-width:0!important;background:linear-gradient(180deg,#4ade80 0%,#16a34a 52%,#15803d 100%)!important;color:white!important;font:900 11px Arial,sans-serif!important;white-space:nowrap!important;text-shadow:0 1px 1px rgba(0,0,0,.32)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 2px 0 #14532d,0 4px 8px rgba(0,0,0,.24)!important;transform:none!important;cursor:pointer!important;`;
+    return;
+  }
   const bottomPosition = side === 'left' ? 146 : 82;
   button.style.cssText = `position:fixed!important;left:8px!important;right:auto!important;bottom:${bottomPosition}px!important;z-index:2147483647!important;display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;box-sizing:border-box!important;border:1px solid #15803d!important;border-bottom:2px solid #14532d!important;border-radius:10px!important;padding:7px 12px!important;width:334px!important;height:50px!important;max-width:calc(100vw - 16px)!important;min-width:0!important;background:linear-gradient(180deg,#4ade80 0%,#16a34a 52%,#15803d 100%)!important;color:white!important;font:900 21px Arial,sans-serif!important;text-shadow:0 1px 1px rgba(0,0,0,.38)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 4px 0 #14532d,0 7px 13px rgba(0,0,0,.3)!important;transform:translateY(-2px)!important;cursor:pointer!important;transition:transform .12s ease,box-shadow .12s ease!important;`;
 };

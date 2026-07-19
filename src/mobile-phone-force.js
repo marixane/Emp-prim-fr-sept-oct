@@ -13,7 +13,6 @@ function applyMobilePhoneForce() {
   var pagesOverflow = (pageCount * scaledPageHeight + Math.max(0, pageCount - 1) * gap) > (viewportHeight + 2);
   var needsVerticalScroll = pageCount > 1 || pagesOverflow;
   var bottomRoom = needsVerticalScroll ? 18 : 0;
-  var sideMargin = Math.max(0, Math.floor((viewportWidth - scaledWidth) / 2));
   var mobileA4Gap = -Math.max(0, Math.round(1123 * (1 - mobileScale) - bottomRoom));
   var previewOverflowY = needsVerticalScroll ? 'auto' : 'hidden';
   var previewPaddingBottom = needsVerticalScroll ? 12 : 0;
@@ -225,12 +224,14 @@ function applyMobilePhoneForce() {
 
       body .preview-zone .a4-page,
       body .a4-page {
-        transform: scale(${mobileScale}) !important;
+        position: relative !important;
+        left: 50% !important;
+        transform: scale(${mobileScale}) translateX(-50%) !important;
         transform-origin: top left !important;
         width: 794px !important;
         min-width: 794px !important;
         max-width: 794px !important;
-        margin: 0 0 ${mobileA4Gap}px ${sideMargin}px !important;
+        margin: 0 0 ${mobileA4Gap}px 0 !important;
         flex: 0 0 auto !important;
         translate: 0 0 !important;
       }
