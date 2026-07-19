@@ -212,6 +212,10 @@ const prepareClone = (clone, source) => {
   clone.querySelectorAll('select').forEach((select, index) => {
     const sourceSelect = sourceSelects[index];
     const selectedValue = sourceSelect?.value ?? select.value;
+    const selectedText = sourceSelect?.selectedOptions?.[0]?.textContent?.trim()
+      || Array.from(select.options).find((option) => option.value === selectedValue)?.textContent?.trim()
+      || selectedValue
+      || '';
 
     if (select.classList.contains('timetable-subject-select')) {
       const subjectLabel = document.createElement('div');
@@ -238,7 +242,12 @@ const prepareClone = (clone, source) => {
       // Le texte d'aide « اختر المادة » reste uniquement dans l'interface web.
       const subjectText = document.createElement('span');
       subjectText.className = 'pdf-selected-subject-text';
-      subjectText.textContent = selectedValue || '';
+      subjectText.textContent = selectedValue ? selectedText : '';
+      subjectText.style.setProperty('display', 'block', 'important');
+      subjectText.style.setProperty('visibility', 'visible', 'important');
+      subjectText.style.setProperty('opacity', '1', 'important');
+      subjectText.style.setProperty('color', '#111827', 'important');
+      subjectText.style.setProperty('-webkit-text-fill-color', '#111827', 'important');
       subjectLabel.append(subjectText);
       subjectLabel.setAttribute('dir', sourceSelect?.style.direction || select.style.direction || 'rtl');
       subjectLabel.setAttribute('aria-label', select.getAttribute('aria-label') || 'المادة');
@@ -246,11 +255,20 @@ const prepareClone = (clone, source) => {
       return;
     }
 
-    select.value = selectedValue;
-    Array.from(select.options).forEach((option) => {
-      if (option.value === selectedValue) option.setAttribute('selected', 'selected');
-      else option.removeAttribute('selected');
-    });
+    const selectedLabel = document.createElement('div');
+    selectedLabel.className = `${select.className} pdf-selected-control`;
+    selectedLabel.style.cssText = select.style.cssText;
+    selectedLabel.textContent = selectedText;
+    selectedLabel.setAttribute('dir', sourceSelect?.getAttribute('dir') || select.getAttribute('dir') || 'rtl');
+    if (select.dataset.levelTone) selectedLabel.dataset.levelTone = select.dataset.levelTone;
+    selectedLabel.style.setProperty('display', 'flex', 'important');
+    selectedLabel.style.setProperty('align-items', 'center', 'important');
+    selectedLabel.style.setProperty('justify-content', 'center', 'important');
+    selectedLabel.style.setProperty('visibility', 'visible', 'important');
+    selectedLabel.style.setProperty('opacity', '1', 'important');
+    selectedLabel.style.setProperty('color', '#111827', 'important');
+    selectedLabel.style.setProperty('-webkit-text-fill-color', '#111827', 'important');
+    select.replaceWith(selectedLabel);
   });
   // Ne pas modifier la carte des vacances et des événements dans le clone PDF.
   // Son thème moderne est déjà entièrement défini par la feuille de style du
