@@ -2,12 +2,11 @@ function applyMobilePhoneForce() {
   var existing = document.getElementById('mobile-phone-force-style');
   if (existing) existing.remove();
 
-  var viewportWidth = Math.max(240, Math.round(window.visualViewport?.width || window.innerWidth || document.documentElement.clientWidth || 0));
-  var viewportHeight = Math.max(320, Math.round(window.visualViewport?.height || window.innerHeight || document.documentElement.clientHeight || 0));
+  var viewportWidth = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+  var viewportHeight = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
   var availableWidth = Math.max(240, viewportWidth - 18);
   var mobileScale = Math.min(1, Math.max(0.32, availableWidth / 794));
   var scaledWidth = Math.ceil(794 * mobileScale);
-  var pageSideMargin = Math.max(0, Math.floor((viewportWidth - scaledWidth) / 2));
   var scaledPageHeight = 1123 * mobileScale;
   var pageCount = Math.max(1, document.querySelectorAll('.preview-zone .a4-page').length || document.querySelectorAll('.a4-page').length || 1);
   var gap = 6;
@@ -226,13 +225,13 @@ function applyMobilePhoneForce() {
       body .preview-zone .a4-page,
       body .a4-page {
         position: relative !important;
-        left: 0 !important;
-        transform: scale(${mobileScale}) !important;
+        left: 50% !important;
+        transform: scale(${mobileScale}) translateX(-50%) !important;
         transform-origin: top left !important;
         width: 794px !important;
         min-width: 794px !important;
         max-width: 794px !important;
-        margin: 0 0 ${mobileA4Gap}px ${pageSideMargin}px !important;
+        margin: 0 0 ${mobileA4Gap}px 0 !important;
         flex: 0 0 auto !important;
         translate: 0 0 !important;
       }
