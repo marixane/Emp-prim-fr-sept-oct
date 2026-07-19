@@ -7,3 +7,17 @@ body.cahier-tab-active .cahier-preview-zone > .cover-page-only {
   margin: 0 !important;
   pointer-events: none !important;
 }
+
+/* Sur le site, seule la page du tableau de service reste visible. Les pages
+   calculées demeurent dans le DOM pour l'export, mais sont placées hors écran.
+   Cette règle est limitée au média écran : le PDF conserve toutes les pages. */
+@media screen {
+  body.cahier-tab-active .cahier-preview-zone > .a4-page:not(.primary-timetable-page):not(.cover-page-only),
+  body.cahier-tab-active .cahier-preview-zone > .cahier-page:not(.primary-timetable-page):not(.cover-page-only) {
+    position: fixed !important;
+    top: 0 !important;
+    left: -100000px !important;
+    margin: 0 !important;
+    pointer-events: none !important;
+  }
+}
