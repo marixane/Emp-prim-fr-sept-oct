@@ -150,4 +150,9 @@ import './cahier-web-timetable-only.css';
 import './cahier-timetable-service.css';
 import './cahier-timetable-service.js';
 
+// Active l'interface cahier avant le premier rendu afin d'éviter le flash
+// de l'ancien modèle (couverture et grands boutons verts).
+document.body.classList.add('cahier-tab-active');
+document.body.classList.remove('devoir-tab-active');
+
 createRoot(document.getElementById('root')).render(<App />);
