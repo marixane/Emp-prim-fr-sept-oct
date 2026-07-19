@@ -14,9 +14,15 @@ const EXPORT_CSS = `
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; box-sizing: border-box !important; }
   html, body { margin: 0 !important; padding: 0 !important; background: white !important; overflow: visible !important; }
   .cahier-preview-zone { display: block !important; width: ${A4_WIDTH} !important; margin: 0 !important; padding: 0 !important; overflow: visible !important; transform: none !important; zoom: 1 !important; }
-  .a4-page, .cahier-page {
+  html body .cahier-preview-zone > .a4-page,
+  html body .cahier-preview-zone > .cahier-page {
     display: block !important;
     position: relative !important;
+    inset: auto !important;
+    top: 0 !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: 0 !important;
     width: ${A4_WIDTH} !important;
     min-width: ${A4_WIDTH} !important;
     max-width: ${A4_WIDTH} !important;
@@ -25,6 +31,8 @@ const EXPORT_CSS = `
     max-height: ${A4_HEIGHT} !important;
     margin: 0 !important;
     transform: none !important;
+    transform-origin: top left !important;
+    translate: none !important;
     scale: 1 !important;
     zoom: 1 !important;
     overflow: hidden !important;
