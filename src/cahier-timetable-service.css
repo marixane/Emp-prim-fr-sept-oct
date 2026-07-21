@@ -106,9 +106,11 @@
 .cahier-layout-cycle-button:active { transform:translateY(1px) !important; box-shadow:inset 0 2px 4px rgba(35,82,122,.15) !important; }
 
 @media (max-width:1200px) {
-  /* Rapproche le tableau du titre tout en gardant une zone libre pour les commandes. */
-  .cahier-service-page .primary-timetable-layout {
-    top: 56px !important;
+  /* Rapproche légèrement le tableau du titre tout en gardant une zone libre
+     pour les trois commandes compactes en bas de la page. */
+  body.emp-primaire-ar .cahier-preview-zone
+    .a4-page.primary-timetable-page .primary-timetable-layout {
+    top: -24px !important;
   }
   .cahier-timetable-toolbar {
     right: 24px !important;
