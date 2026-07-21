@@ -24,6 +24,12 @@
   opacity: 1 !important;
 }
 
+/* Même alignement sur ordinateur : le tableau seul se rapproche du titre. */
+body.emp-primaire-ar .cahier-preview-zone
+  .a4-page.primary-timetable-page .primary-timetable-layout {
+  top: -24px !important;
+}
+
 .cahier-timetable-toolbar {
   position: absolute !important;
   right: 24px !important;
