@@ -14,6 +14,16 @@
 }
 .cahier-service-page > .cahier-header > h2::after { content: 'Tableau de service :' !important; }
 
+/* Évite le flash du contrôle de disposition avant que la barre soit prête. */
+.cahier-service-page:not(.cahier-service-ready) > .cahier-class-grouping-control {
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+.cahier-service-page.cahier-service-ready > .cahier-class-grouping-control {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
 .cahier-timetable-toolbar {
   position: absolute !important;
   right: 24px !important;
@@ -97,34 +107,37 @@
 
 @media (max-width:1200px) {
   .cahier-timetable-toolbar {
-    right: 38px !important;
-    bottom: 16px !important;
-    left: 38px !important;
-    gap: 14px !important;
-    min-height: 70px !important;
-    padding: 7px 10px !important;
-    border-radius: 18px !important;
+    right: 24px !important;
+    bottom: 12px !important;
+    left: 24px !important;
+    gap: 8px !important;
+    min-height: 42px !important;
+    padding: 4px 6px !important;
+    border-radius: 11px !important;
   }
-  .cahier-timetable-toolbar.has-option { grid-template-columns: 220px minmax(230px,1fr) 220px !important; }
+  .cahier-timetable-toolbar.has-option { grid-template-columns: minmax(0,1fr) minmax(0,1.2fr) minmax(0,1fr) !important; }
   .cahier-timetable-toolbar:not(.has-option) {
-    grid-template-columns: 220px 220px !important;
+    grid-template-columns: minmax(0,1fr) minmax(0,1fr) !important;
     justify-content: space-between !important;
   }
   .cahier-timetable-toolbar-button {
-    width: 220px !important;
-    height: 56px !important;
-    border-radius: 14px !important;
-    font-size: 19px !important;
+    width: 100% !important;
+    max-width: 150px !important;
+    height: 34px !important;
+    border-radius: 9px !important;
+    padding: 4px 7px !important;
+    font-size: 12px !important;
   }
   .cahier-timetable-toolbar-option {
-    max-width: 270px !important;
-    min-height: 56px !important;
-    padding: 6px 9px !important;
-    border-radius: 14px !important;
-    font-size: 14px !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 34px !important;
+    padding: 3px 5px !important;
+    border-radius: 9px !important;
+    font-size: 0 !important;
   }
-  .cahier-timetable-toolbar-option .cahier-layout-cycle-button { height: 44px !important; }
-  .cahier-layout-cycle-title { font-size:11px !important; }
-  .cahier-layout-cycle-value { font-size:14px !important; }
+  .cahier-timetable-toolbar-option .cahier-layout-cycle-button { height: 26px !important; padding: 2px 5px !important; font-size: 10px !important; }
+  .cahier-layout-cycle-title { font-size:9px !important; }
+  .cahier-layout-cycle-value { font-size:10px !important; }
 }
 @media print { .cahier-timetable-toolbar { display:none !important; } }

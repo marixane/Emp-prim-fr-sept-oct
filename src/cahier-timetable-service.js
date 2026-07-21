@@ -37,6 +37,7 @@ const syncToolbar = () => {
   const alreadyOrdered = current.length === desired.length && desired.every((node, index) => current[index] === node);
   if (!alreadyOrdered) toolbar.append(...desired);
   toolbar.classList.toggle('has-option', Boolean(option));
+  page.classList.add('cahier-service-ready');
 };
 
 let timer = 0;
