@@ -53,7 +53,7 @@ body.emp-primaire-ar .cahier-preview-zone
 .cahier-timetable-toolbar-button {
   align-items: center !important;
   justify-content: center !important;
-  width: 140px !important;
+  width: 130px !important;
   height: 28px !important;
   padding: 4px 10px !important;
   border: 1px solid #65a5dc !important;
@@ -134,7 +134,7 @@ body.emp-primaire-ar .cahier-preview-zone
   }
   .cahier-timetable-toolbar-button {
     width: 100% !important;
-    max-width: 176px !important;
+    max-width: 184px !important;
     height: 40px !important;
     border-radius: 9px !important;
     padding: 4px 8px !important;
