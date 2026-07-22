@@ -93,6 +93,8 @@ body.emp-primaire-ar .cahier-preview-zone
   transform: none !important;
 }
 .cahier-timetable-toolbar-option .cahier-layout-cycle-button {
+  display: block !important;
+  box-sizing: border-box !important;
   width: 100% !important;
   min-width: 0 !important;
   height: 34px !important;
@@ -104,6 +106,9 @@ body.emp-primaire-ar .cahier-preview-zone
   font: 800 10px Arial,sans-serif !important;
   cursor: pointer !important;
   box-shadow: inset 0 1px 0 rgba(255,255,255,.9),0 2px 5px rgba(35,82,122,.14) !important;
+}
+.cahier-timetable-toolbar-option:has(.cahier-layout-cycle-button) {
+  display: block !important;
 }
 .cahier-layout-cycle-title,
 .cahier-layout-cycle-value { display:block !important; white-space:nowrap !important; }
