@@ -78,9 +78,9 @@ body.emp-primaire-ar .cahier-preview-zone
   grid-template-columns: auto minmax(0,1fr) !important;
   align-items: center !important;
   gap: 7px !important;
-  width: 300px !important;
-  max-width: 300px !important;
-  min-width: 300px !important;
+  width: 340px !important;
+  max-width: 340px !important;
+  min-width: 340px !important;
   min-height: 30px !important;
   margin: 0 auto !important;
   padding: 2px 5px !important;
