@@ -13,11 +13,16 @@ export const config = {
 };
 
 const MAX_HTML_SIZE = 18 * 1024 * 1024;
+const MAX_BASE_URL_LENGTH = 512;
 const LONG_TIMEOUT = 120000;
 const A4_WIDTH = 794;
 const A4_HEIGHT = 1123;
 const A4_WIDTH_CSS = '210mm';
 const A4_HEIGHT_CSS = '297mm';
+
+const RATE_LIMIT_WINDOW_MS = 60 * 1000;
+const RATE_LIMIT_MAX_REQUESTS = 8;
+const rateLimitStore = globalThis.__cahierPdfRateLimitStore || (globalThis.__cahierPdfRateLimitStore = new Map());
 
 const LOCAL_CHROME_PATHS = [
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
@@ -33,7 +38,49 @@ const getExecutablePath = async () => {
   return chromium.executablePath();
 };
 const getLaunchArgs = () => isLocalDev() ? ['--no-sandbox', '--disable-setuid-sandbox'] : chromium.args;
-const cleanBaseUrl = (url) => String(url || 'https://a4exam.com').replace(/["<>]/g, '').replace(/\/$/, '');
+const getClientAddress = (req) => {
+  const forwarded = String(req?.headers?.['x-forwarded-for'] || '').split(',')[0].trim();
+  const real = String(req?.headers?.['x-real-ip'] || '').trim();
+  return (forwarded || real || 'unknown').slice(0, 64);
+};
+
+const applyRateLimit = (req, res) => {
+  const now = Date.now();
+  const key = getClientAddress(req);
+  let entry = rateLimitStore.get(key);
+  if (!entry || now - entry.startedAt >= RATE_LIMIT_WINDOW_MS) { entry = { startedAt: now, count: 0 }; rateLimitStore.set(key, entry); }
+  entry.count += 1;
+  const resetAt = entry.startedAt + RATE_LIMIT_WINDOW_MS;
+  const remaining = Math.max(0, RATE_LIMIT_MAX_REQUESTS - entry.count);
+  res.setHeader('RateLimit-Limit', RATE_LIMIT_MAX_REQUESTS);
+  res.setHeader('RateLimit-Remaining', remaining);
+  res.setHeader('RateLimit-Reset', Math.ceil(resetAt / 1000));
+  if (entry.count > RATE_LIMIT_MAX_REQUESTS) { res.setHeader('Retry-After', Math.max(1, Math.ceil((resetAt - now) / 1000))); return false; }
+  return true;
+};
+
+const isAllowedBaseHost = (hostname) => {
+  const host = String(hostname || '').toLowerCase().replace(/\.$/, '');
+  return host === 'localhost' || host === '127.0.0.1' || host === 'a4exam.com' || host.endsWith('.a4exam.com') || host.endsWith('.vercel.app');
+};
+
+const cleanBaseUrl = (url, req) => {
+  const fallbackHost = String(req?.headers?.host || 'a4exam.com').split(':')[0];
+  const raw = String(url || `https://${fallbackHost}`).trim();
+  if (raw.length > MAX_BASE_URL_LENGTH) throw new Error('URL de base trop longue');
+  let parsed;
+  try { parsed = new URL(raw); } catch { throw new Error('URL de base invalide'); }
+  if (!['http:', 'https:'].includes(parsed.protocol) || !isAllowedBaseHost(parsed.hostname)) throw new Error('Domaine de base non autorisé');
+  return parsed.origin;
+};
+
+const sanitizeHtml = (html) => String(html)
+  .replace(/<!--[\s\S]*?-->/g, '')
+  .replace(/<\s*(script|iframe|object|embed|form|base|meta|link)\b[^>]*>[\s\S]*?<\s*\/\s*\1\s*>/gi, '')
+  .replace(/<\s*(script|iframe|object|embed|form|base|meta|link)\b[^>]*\/?>/gi, '')
+  .replace(/\s+on[a-z0-9_-]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '')
+  .replace(/\s+(?:href|src|action|xlink:href)\s*=\s*(["'])\s*javascript:[\s\S]*?\1/gi, '')
+  .replace(/\s+(?:href|src|action|xlink:href)\s*=\s*(["'])\s*data:text\/html[\s\S]*?\1/gi, '');
 const errorMessage = (error) => String(error?.message || error || 'Erreur génération PDF');
 
 const isInlinePreview = (req) => {
@@ -68,9 +115,15 @@ const enrichHomeworkDates = (html) => String(html).replace(
 );
 
 export default async function handler(req, res) {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  if (!applyRateLimit(req, res)) {
+    return res.status(429).json({ error: 'Trop de demandes. Réessayez dans une minute.' });
   }
 
   const { html, baseUrl } = req.body || {};
@@ -80,6 +133,15 @@ export default async function handler(req, res) {
 
   if (html.length > MAX_HTML_SIZE) {
     return res.status(413).json({ error: 'Document trop grand pour générer le PDF' });
+  }
+
+  let safeBase;
+  let enrichedHtml;
+  try {
+    safeBase = cleanBaseUrl(baseUrl, req);
+    enrichedHtml = enrichHomeworkDates(sanitizeHtml(html));
+  } catch (error) {
+    return res.status(400).json({ error: errorMessage(error) });
   }
 
   let browser;
@@ -98,8 +160,6 @@ export default async function handler(req, res) {
     page.setDefaultTimeout(LONG_TIMEOUT);
     page.setDefaultNavigationTimeout(LONG_TIMEOUT);
 
-    const safeBase = cleanBaseUrl(baseUrl);
-    const enrichedHtml = enrichHomeworkDates(html);
     const documentHtml = `<!doctype html>
 <html>
 <head>
