@@ -117,6 +117,8 @@ import './cahier-event-badge-center.css';
 import './cahier-exams-last-in-pdf.js';
 // Les deux boutons PDF utilisent la même fonction de génération.
 import './cahier-pdf-button-safari-safe.js';
+import './cahier-calendar-ribbon.css';
+import './cahier-calendar-ribbon.js';
 import './cahier-pdf-class-size-fix.js';
 import './cahier-first-saturday-visibility.js';
 import './cahier-pdf-compact-timetable.css';
